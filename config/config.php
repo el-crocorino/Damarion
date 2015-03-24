@@ -27,6 +27,16 @@
                     'tests'   => 'tests/'
                 );
 
+                // DB
+
+                $master = array('dbname' => 'LBC', 'host' => 'localhost', 'user' => "lbc_master", 'password' => '123,N!4B;456,CDC');
+                $slave = array('dbname' => 'LBC', 'host' => 'localhost', 'user' => "lbc_slave", 'password' => '789,DMPN;1011123STR');
+
+                $dConfig['db'] = array(
+                    'master' => $master,
+                    'slave' => $slave
+                );
+
                 // Tests
 
                 $dConfig['tests'] = array(
