@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit colors="true" bootstrap="base.class.php" >>
+    <testsuites>
+        <testsuite name="Infomaniak test suite">
+            <directory suffix="Test.class.php">classes/application/</directory>
+            <directory suffix="Test.class.php">classes/campus/</directory>
+            <directory suffix="Test.class.php">classes/item_list/</directory>
+            <directory suffix="Test.class.php">classes/storable/</directory>
+            <directory suffix="Test.class.php">classes/student/</directory>
+            <directory suffix="Test.class.php">classes/teacher/</directory>
+            <directory suffix="Test.class.php">classes/salary/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
