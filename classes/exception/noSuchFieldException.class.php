@@ -1,13 +1,13 @@
 <?php
 
     /**
-     * fullCampusException class of Infomaniak
+     * noSuchFieldException class of Infomaniak
      *
      * @package exception
      * @author  Olivier Wenzek <owenzek@gmail.com>
      */
 
-    class fullCampusException extends RuntimeException {
+    class noSuchFieldException extends RuntimeException {
 
         public function __construct($message, $code = 0, Exception $previous = null) {
             parent::__construct($message, $code, $previous);

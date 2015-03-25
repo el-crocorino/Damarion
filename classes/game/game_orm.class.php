@@ -19,20 +19,20 @@
          *
          * @return string
          */
-        public function set_id($id) {
+       /* public function set_id($id) {
 
             check_int($id, 'id');
             $this->id = $id;
-        }
+        }*/
 
         /**
          * Gets game id
          *
          * @return string
          */
-        public function get_id() {
+      /*  public function get_id() {
             return $this->id;
-        }
+        }*/
 
         /**
          * Sets game title
@@ -40,20 +40,19 @@
          * @param string $title
          * @return void
          */
-        public function set_title($title) {
+    /*    public function set_title($title) {
             check_string($title, 'title');
             $this->title = $title;
-        }
+        }*/
 
         /**
          * Gets game title
          *
          * @return string
          */
-        public function get_title() {
+/*        public function get_title() {
             return $this->title;
-        }
-
+        }*/
 
         public function load($id) {
 
@@ -73,7 +72,6 @@
                 $this->$method($item);
 
             }
-
 
         }
 
@@ -106,7 +104,7 @@
 
             foreach ($game_data AS $index => $item) {
 
-                if ($index == 'game_id') {
+                if (false !== strpos($index, '_id')) {
                     $item = (int)$item;
                 }
 
@@ -118,8 +116,6 @@
         }
 
         public function save() {
-
-
 
             $db = dbmanager::get_master();
 
