@@ -29,8 +29,8 @@
 
                 // DB
 
-                $master = array('dbname' => 'LBC', 'host' => 'localhost', 'user' => "lbc_master", 'password' => '123,N!4B;456,CDC');
-                $slave = array('dbname' => 'LBC', 'host' => 'localhost', 'user' => "lbc_slave", 'password' => '789,DMPN;1011123STR');
+                $master = array('dbname' => 'damarion', 'host' => 'localhost', 'user' => "damarion_master", 'password' => 'Hy7x6M3VRFRMVX4j');
+                $slave = array('dbname' => 'damarion', 'host' => 'localhost', 'user' => "damarion_slave", 'password' => 'MnfKt2Wswy2QNTYD');
 
                 $dConfig['db'] = array(
                     'master' => $master,
