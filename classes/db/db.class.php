@@ -40,6 +40,21 @@ class db extends db_orm {
 
     }
 
+    public function get_value($table = '', $id) {
+
+        check_int($id, 'id');
+
+        $sql = 'SELECT * FROM ' . $table . ' WHERE ' . $table . '_id = ' . $id;
+
+        $query = $this->pdo->prepare($sql);
+        $query->execute();
+
+        $res = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $res;
+
+    }
+
     public function save($item) {
 
         $sql = 'INSERT INTO ' . $item->get_storable_table() . ' (' . $item->get_storable_fields() . ') VALUES (' . implode(', ', array_keys($item->get_storable_values())) . ')';

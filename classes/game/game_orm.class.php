@@ -1,6 +1,6 @@
 <?php
 
-    class game_orm implements storable {
+    class game_orm extends storable {
 
         /**
          * game id
@@ -20,6 +20,7 @@
          * @return string
          */
         public function set_id($id) {
+
             check_int($id, 'id');
             $this->id = $id;
         }
@@ -62,8 +63,8 @@
 
             $game_data = $db->get_value('game', $id);
 
-            $this->set_id($game_data['id']);
-            $this->set_title($game_data['title']);
+            $this->set_id((int)$game_data['game_id']);
+            $this->set_title($game_data['game_title']);
 
         }
 
