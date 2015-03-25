@@ -29,20 +29,30 @@
 
             global $dConfig;
 
-            if (substr($classname, -4) == '_orm') {
-                $classname = substr($classname, 0, -4);
-                require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php';
-            } else if (substr($classname, -7) == 'manager') {
-                $classname = substr($classname, 0, -7);
-                require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . 'manager.class.php';
-            } else {
+            switch($classname) {
 
-                if (file_exists($dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php')) {
+                case false !== strpos($classname, '_orm'):
+                    $classname = substr($classname, 0, -4);
                     require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php';
-                }
+                    break;
 
-                require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '.class.php';
+                case false !== strpos($classname, 'manager'):
+                    $classname = substr($classname, 0, -7);
+                    require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . 'manager.class.php';
+                    break;
 
+                case false !== strpos($classname, 'Exception'):
+                    require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . 'exception/' . $classname . '.class.php';
+                    break;
+
+                default :
+
+                    if (file_exists($dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php')) {
+                        require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php';
+                    }
+
+                    require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '.class.php';
+                    break;
             }
 
         } catch (Exception $e) {
