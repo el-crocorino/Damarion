@@ -29,19 +29,20 @@
 
             global $dConfig;
 
-            switch($classname) {
+            if (substr($classname, -4) == '_orm') {
+                $classname = substr($classname, 0, -4);
+                require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php';
+            } else if (substr($classname, -7) == 'manager') {
+                $classname = substr($classname, 0, -7);
+                require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . 'manager.class.php';
+            } else {
 
-                case false !== strpos($classname, '_teacher'):
-                    require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . 'teacher/' . $classname . '.class.php';
-                    break;
+                if (file_exists($dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php')) {
+                    require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '_orm.class.php';
+                }
 
-                case false !== strpos($classname, 'Exception'):
-                    require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . 'exception/' . $classname . '.class.php';
-                    break;
+                require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '.class.php';
 
-                default :
-                    require_once $dConfig['paths']['base_path'] . $dConfig['paths']['classes'] . $classname . '/' . $classname . '.class.php';
-                    break;
             }
 
         } catch (Exception $e) {
