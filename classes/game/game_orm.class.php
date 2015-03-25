@@ -63,8 +63,17 @@
 
             $game_data = $db->get_value('game', $id);
 
-            $this->set_id((int)$game_data['game_id']);
-            $this->set_title($game_data['game_title']);
+            foreach ($game_data AS $index => $item) {
+
+                if ($index == 'game_id') {
+                    $item = (int)$item;
+                }
+
+                $method = 'set_' . substr($index, 5);
+                $this->$method($item);
+
+            }
+
 
         }
 
@@ -87,6 +96,7 @@
         public function get($game_id) {
 
             check_int($game_id, 'game_id');
+
             $this->set_id($game_id);
 
             $where = array('game_id = ' . $game_id);
@@ -108,6 +118,8 @@
         }
 
         public function save() {
+
+
 
             $db = dbmanager::get_master();
 

@@ -36,6 +36,12 @@
             $this->assertEquals(1, $this->game->get_id());
             $this->assertEquals('test', $this->game->get_title());
 
+            $this->setExpectedException('dbException');
+            $this->game->load(9999);
+
+            /*$this->assertEquals(1, $this->game->get_id());
+            $this->assertEquals('test', $this->game->get_title());*/
+
         }
 
     }

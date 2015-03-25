@@ -51,7 +51,11 @@ class db extends db_orm {
 
         $res = $query->fetch(PDO::FETCH_ASSOC);
 
-        return $res;
+        if (!$res) {
+            throw new dbException("No data available", 1);
+        } else {
+            return $res;
+        }
 
     }
 
