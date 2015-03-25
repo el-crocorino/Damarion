@@ -1,33 +1,39 @@
 <?php
 
-    class question_orm extends storable {
+    class option_orm extends storable {
 
         /**
-         * question id
+         * option id
          * @var int
          */
         protected $id = NULL;
 
         /**
-         * question game_id
+         * option game_id
          * @var int
          */
-        protected $game_id = NULL;
+        protected $question_id = NULL;
 
         /**
-         * question text
+         * option text
          * @var string
          */
         protected $text = '';
 
         /**
-         * question order
-         * @var int
+         * option right
+         * @var bool
          */
-        protected $order = NULL;
+        protected $right = NULL;
 
         /**
-         * Sets question id
+         * option active
+         * @var bool
+         */
+        protected $active = NULL;
+
+        /**
+         * Sets option id
          *
          * @return string
          */
@@ -37,7 +43,7 @@
         }
 
         /**
-         * Gets question id
+         * Gets option id
          *
          * @return string
          */
@@ -46,26 +52,26 @@
         }
 
         /**
-         * Sets question game_id
+         * Sets option game_id
          *
          * @return string
          */
-        public function set_game_id($game_id) {
-            check_int($game_id, 'game_id');
-            $this->game_id = $game_id;
+        public function set_question_id($question_id) {
+            check_int($question_id, 'question_id');
+            $this->question_id = $question_id;
         }
 
         /**
-         * Gets question game_id
+         * Gets option question_id
          *
          * @return string
          */
-        public function get_game_id() {
-            return $this->game_id;
+        public function get_question_id() {
+            return $this->question_id;
         }
 
         /**
-         * Sets question text
+         * Sets option text
          *
          * @param string $text
          * @return void
@@ -76,7 +82,7 @@
         }
 
         /**
-         * Gets question text
+         * Gets option text
          *
          * @return string
          */
@@ -85,22 +91,41 @@
         }
 
         /**
-         * Sets question order
+         * Sets option right
          *
          * @return string
          */
-        public function set_order($order) {
-            check_int($order, 'order');
-            $this->order = $order;
+        public function set_right($right) {
+            check_int($right, 'right');
+            $this->right = $right;
         }
 
         /**
-         * Gets question order
+         * Gets option right
          *
          * @return string
          */
-        public function get_order() {
-            return $this->order;
+        public function get_right() {
+            return $this->right;
+        }
+
+        /**
+         * Sets option active
+         *
+         * @return string
+         */
+        public function set_active($active) {
+            check_int($active, 'active');
+            $this->active = $active;
+        }
+
+        /**
+         * Gets option active
+         *
+         * @return string
+         */
+        public function get_active() {
+            return $this->active;
         }
 
         public function load($id) {
@@ -109,9 +134,9 @@
 
             $db = dbmanager::get_slave();
 
-            $question_data = $db->get_value('question', $id);
+            $option_data = $db->get_value('option', $id);
 
-            foreach ($question_data AS $index => $item) {
+            foreach ($option_data AS $index => $item) {
 
                 if (false !== strpos($index, '_id') || false !== strpos($index, '_order')) {
                     $item = (int)$item;
@@ -132,7 +157,7 @@
                 $value = '"' . $value . '"';
             }
 
-            $this->set_id($question_id);
+            $this->set_id($option_id);
 
             $where = array($field . ' = ')
 
@@ -140,20 +165,20 @@
             $db->get($this->get_storable_table, $this->get_storable_fields);*/
         }
 
-        public function get($question_id) {
+        public function get($option_id) {
 
-            check_int($question_id, 'question_id');
+            check_int($option_id, 'option_id');
 
-            $this->set_id($question_id);
+            $this->set_id($option_id);
 
-            $where = array('question_id = ' . $question_id);
+            $where = array('option_id = ' . $option_id);
 
             $db = dbmanager::get_slave();
-            $question_data = $db->get($this->get_storable_table(), $this->get_storable_fields(), $where, array(), array());
+            $option_data = $db->get($this->get_storable_table(), $this->get_storable_fields(), $where, array(), array());
 
-            foreach ($question_data AS $index => $item) {
+            foreach ($option_data AS $index => $item) {
 
-                if ($index == 'question_id') {
+                if ($index == 'option_id') {
                     $item = (int)$item;
                 }
 
@@ -168,7 +193,7 @@
 
             $db = dbmanager::get_master();
 
-            if (/*question with id already exists*/false) {
+            if (/*option with id already exists*/false) {
                 $db->update($this);
             } else {
                 $db->save($this);
@@ -183,7 +208,7 @@
          * @return string Table
          */
         public function get_storable_table() {
-            return 'question';
+            return 'option';
         }
 
         /**
@@ -192,7 +217,7 @@
          * @return string Fields
          */
         public function get_storable_fields() {
-            return 'question_id, question_game_id, question_text, question_order';
+            return 'option_id, option_question_id, option_text, option_right, option_active';
         }
 
         /**
@@ -203,10 +228,11 @@
         public function get_storable_values() {
 
             $values = array(
-                ':question_id' => $this->get_id(),
-                ':question_game_id' => $this->get_game_id(),
-                ':question_text' => $this->get_text(),
-                ':question_order' => $this->get_order()
+                ':option_id' => $this->get_id(),
+                ':option_game_id' => $this->get_game_id(),
+                ':option_text' => $this->get_text(),
+                ':option_right' => $this->get_right(),
+                ':option_active' => $this->get_active()
             );
 
             return $values;
