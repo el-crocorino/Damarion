@@ -47,7 +47,13 @@ class db extends db_orm {
         $sql = 'SELECT * FROM ' . $table . ' WHERE ' . $table . '_id = ' . $id;
 
         $query = $this->pdo->prepare($sql);
-        $query->execute();
+
+        try {
+            $query->execute();
+        } catch(PDOException $PDOException) {
+            dump($PDOException->getMessage());
+        }
+
 
         $res = $query->fetch(PDO::FETCH_ASSOC);
 

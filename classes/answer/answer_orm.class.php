@@ -1,6 +1,6 @@
 <?php
 
-    class question_orm extends storable {
+    class answer_orm extends storable {
 
         /**
          * Table prefix length description
@@ -10,35 +10,46 @@
         protected $table_prefix_length = NULL;
 
         /**
-         * question id
+         * answer id
+         *
          * @var int
          */
         protected $id = NULL;
 
         /**
-         * question game_id
+         * answer game_id
+         *
          * @var int
          */
-        protected $game_id = NULL;
+        protected $question_id = NULL;
 
         /**
-         * question text
+         * answer text
+         *
          * @var string
          */
         protected $text = '';
 
         /**
-         * question order
-         * @var int
+         * answer right
+         *
+         * @var bool
          */
-        protected $order = NULL;
+        protected $right = NULL;
+
+        /**
+         * answer active
+         *
+         * @var bool
+         */
+        protected $active = NULL;
 
         public function __construct() {
             $this->table_prefix_length = strlen(substr(__CLASS__, 0, -4)) + 1;
         }
 
         /**
-         * Sets question id
+         * Sets answer id
          *
          * @return string
          */
@@ -48,7 +59,7 @@
         }
 
         /**
-         * Gets question id
+         * Gets answer id
          *
          * @return string
          */
@@ -57,26 +68,26 @@
         }
 
         /**
-         * Sets question game_id
+         * Sets answer game_id
          *
          * @return string
          */
-        public function set_game_id($game_id) {
-            check_int($game_id, 'game_id');
-            $this->game_id = $game_id;
+        public function set_question_id($question_id) {
+            check_int($question_id, 'question_id');
+            $this->question_id = $question_id;
         }
 
         /**
-         * Gets question game_id
+         * Gets answer question_id
          *
          * @return string
          */
-        public function get_game_id() {
-            return $this->game_id;
+        public function get_question_id() {
+            return $this->question_id;
         }
 
         /**
-         * Sets question text
+         * Sets answer text
          *
          * @param string $text
          * @return void
@@ -87,7 +98,7 @@
         }
 
         /**
-         * Gets question text
+         * Gets answer text
          *
          * @return string
          */
@@ -96,22 +107,41 @@
         }
 
         /**
-         * Sets question order
+         * Sets answer right
          *
          * @return string
          */
-        public function set_order($order) {
-            check_int($order, 'order');
-            $this->order = $order;
+        public function set_right($right) {
+            check_bool($right, 'right');
+            $this->right = $right;
         }
 
         /**
-         * Gets question order
+         * Gets answer right
          *
          * @return string
          */
-        public function get_order() {
-            return $this->order;
+        public function get_right() {
+            return $this->right;
+        }
+
+        /**
+         * Sets answer active
+         *
+         * @return string
+         */
+        public function set_active($active) {
+            check_bool($active, 'active');
+            $this->active = $active;
+        }
+
+        /**
+         * Gets answer active
+         *
+         * @return string
+         */
+        public function get_active() {
+            return $this->active;
         }
 
         public function load($id) {
@@ -120,12 +150,16 @@
 
             $db = dbmanager::get_slave();
 
-            $question_data = $db->get_value('question', $id);
+            $answer_data = $db->get_value('answer', $id);
 
-            foreach ($question_data AS $index => $item) {
+            foreach ($answer_data AS $index => $item) {
 
                 if (false !== strpos($index, '_id') || false !== strpos($index, '_order')) {
                     $item = (int)$item;
+                }
+
+                if (false !== strpos($index, '_right') || false !== strpos($index, '_active')) {
+                    $item = (boolean)$item;
                 }
 
                 $method = 'set_' . substr($index, $this->table_prefix_length);
@@ -143,7 +177,7 @@
                 $value = '"' . $value . '"';
             }
 
-            $this->set_id($question_id);
+            $this->set_id($answer_id);
 
             $where = array($field . ' = ')
 
@@ -151,22 +185,28 @@
             $db->get($this->get_storable_table, $this->get_storable_fields);*/
         }
 
-        public function get($question_id) {
+        public function get($answer_id) {
 
-            check_int($question_id, 'question_id');
+            check_int($answer_id, 'answer_id');
 
-            $this->set_id($question_id);
+            $this->set_id($answer_id);
 
-            $where = array('question_id = ' . $question_id);
+            $where = array('answer_id = ' . $answer_id);
 
             $db = dbmanager::get_slave();
-            $question_data = $db->get($this->get_storable_table(), $this->get_storable_fields(), $where, array(), array());
 
-            foreach ($question_data AS $index => $item) {
+            $answer_data = $db->get($this->get_storable_table(), $this->get_storable_fields(), $where, array(), array());
 
-                if ($index == 'question_id') {
+            foreach ($answer_data AS $index => $item) {
+
+                if (false !== strpos($index, '_id') || false !== strpos($index, '_order')) {
                     $item = (int)$item;
                 }
+
+                if (false !== strpos($index, '_right') || false !== strpos($index, '_active')) {
+                    $item = (boolean)$item;
+                }
+
 
                 $method = 'set_' . substr($index, $this->table_prefix_length);
                 $this->$method($item);
@@ -179,7 +219,7 @@
 
             $db = dbmanager::get_master();
 
-            if (/*question with id already exists*/false) {
+            if (/*answer with id already exists*/false) {
                 $db->update($this);
             } else {
                 $db->save($this);
@@ -194,7 +234,7 @@
          * @return string Table
          */
         public function get_storable_table() {
-            return 'question';
+            return 'answer';
         }
 
         /**
@@ -203,7 +243,7 @@
          * @return string Fields
          */
         public function get_storable_fields() {
-            return 'question_id, question_game_id, question_text, question_order';
+            return 'answer_id, answer_question_id, answer_text, answer_right, answer_active';
         }
 
         /**
@@ -214,10 +254,11 @@
         public function get_storable_values() {
 
             $values = array(
-                ':question_id' => $this->get_id(),
-                ':question_game_id' => $this->get_game_id(),
-                ':question_text' => $this->get_text(),
-                ':question_order' => $this->get_order()
+                ':answer_id' => $this->get_id(),
+                ':answer_game_id' => $this->get_game_id(),
+                ':answer_text' => $this->get_text(),
+                ':answer_right' => $this->get_right(),
+                ':answer_active' => $this->get_active()
             );
 
             return $values;
