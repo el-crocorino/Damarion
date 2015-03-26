@@ -116,6 +116,25 @@
     }
 
     /**
+     * Checks if data is bool
+     *
+     * @param bool $bool
+     * @param string $name
+     * @return void
+     */
+    function check_bool($bool, $name, $empty_allowed = true) {
+
+        if (!is_bool($bool)) {
+            throw new InvalidArgumentException($name . " must be a bool.", 1);
+        }
+
+        if (!$empty_allowed && NULL == $bool) {
+            throw new InvalidArgumentException($name . ' must not be empty');
+        }
+
+    }
+
+    /**
      * Checks if data is array
      *
      * @param array $array

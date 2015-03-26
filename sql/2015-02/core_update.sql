@@ -1,11 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2+deb7u1
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Erstellungszeit: 25. Mrz 2015 um 18:00
--- Server Version: 5.5.41
--- PHP-Version: 5.5.21-1~dotdeb.1
+-- 2015-03-25 - Database init
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,31 +10,46 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `game`
+-- Tabellenstruktur für Tabelle `answer`
 --
 
-DROP TABLE IF EXISTS `game`;
-CREATE TABLE IF NOT EXISTS `game` (
-  `game_id` int(10) NOT NULL AUTO_INCREMENT,
-  `game_title` varchar(25) NOT NULL,
-  PRIMARY KEY (`game_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `answer` (
+  `answer_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `answer_question_id` int(10) unsigned NOT NULL,
+  `answer_text` varchar(255) NOT NULL,
+  `answer_right` tinyint(1) NOT NULL,
+  `answer_active` tinyint(1) NOT NULL,
+  PRIMARY KEY (`answer_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+--
+-- Daten für Tabelle `answer`
+--
+
+INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_right`, `answer_active`) VALUES
+(5, 1, 'Un marron', 1, 1),
+(6, 1, 'Un ours', 0, 1),
+(7, 1, 'Une hermine', 0, 1),
+(8, 1, 'Un nuage', 0, 1);
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `option`
+-- Tabellenstruktur für Tabelle `game`
 --
 
-DROP TABLE IF EXISTS `option`;
-CREATE TABLE IF NOT EXISTS `option` (
-  `option_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `option_question_id` int(10) unsigned NOT NULL,
-  `option_text` varchar(255) NOT NULL,
-  `option_right` tinyint(1) NOT NULL,
-  `option_active` tinyint(1) NOT NULL,
-  PRIMARY KEY (`option_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `game` (
+  `game_id` int(10) NOT NULL AUTO_INCREMENT,
+  `game_title` varchar(25) NOT NULL,
+  PRIMARY KEY (`game_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `game`
+--
+
+INSERT INTO `game` (`game_id`, `game_title`) VALUES
+(1, 'test');
 
 -- --------------------------------------------------------
 
@@ -49,14 +57,20 @@ CREATE TABLE IF NOT EXISTS `option` (
 -- Tabellenstruktur für Tabelle `question`
 --
 
-DROP TABLE IF EXISTS `question`;
 CREATE TABLE IF NOT EXISTS `question` (
   `question_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `question_game_id` int(10) unsigned NOT NULL,
   `question_text` varchar(255) NOT NULL,
   `question_order` int(10) NOT NULL,
   PRIMARY KEY (`question_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `question`
+--
+
+INSERT INTO `question` (`question_id`, `question_game_id`, `question_text`, `question_order`) VALUES
+(1, 1, 'Qu''est-ce qui est petit et marron ?', 1);
 
 -- --------------------------------------------------------
 
@@ -64,12 +78,18 @@ CREATE TABLE IF NOT EXISTS `question` (
 -- Tabellenstruktur für Tabelle `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_username` varchar(60) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `user`
+--
+
+INSERT INTO `user` (`user_id`, `user_username`) VALUES
+(1, 'olivier');
 
 -- --------------------------------------------------------
 
@@ -77,11 +97,17 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Tabellenstruktur für Tabelle `vote`
 --
 
-DROP TABLE IF EXISTS `vote`;
 CREATE TABLE IF NOT EXISTS `vote` (
   `vote_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `vote_user_id` int(10) unsigned NOT NULL,
   `vote_question_id` int(10) unsigned NOT NULL,
-  `vote_option_id` int(10) unsigned NOT NULL,
+  `vote_answer_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`vote_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Daten für Tabelle `vote`
+--
+
+INSERT INTO `vote` (`vote_id`, `vote_user_id`, `vote_question_id`, `vote_answer_id`) VALUES
+(1, 1, 1, 1);
