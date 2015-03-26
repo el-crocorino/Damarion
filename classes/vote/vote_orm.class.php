@@ -13,25 +13,25 @@
          * vote id
          * @var int
          */
-        protected $id = NULL;
+        protected $id = 0;
 
         /**
          * vote user_id
          * @var int
          */
-        protected $user_id = NULL;
+        protected $user_id = 0;
 
         /**
          * vote question_id
          * @var string
          */
-        protected $question_id = NULL;
+        protected $question_id = 0;
 
         /**
          * vote answer_id
          * @var int
          */
-        protected $answer_id = NULL;
+        protected $answer_id = 0;
 
         public function __construct() {
             $this->table_prefix_length = strlen(substr(__CLASS__, 0, -4)) + 1;
@@ -43,8 +43,7 @@
          * @return string
          */
         public function set_id($id) {
-            check_int($id, 'id');
-            $this->id = $id;
+            $this->id = (int)$id;
         }
 
         /**
@@ -62,8 +61,7 @@
          * @return string
          */
         public function set_user_id($user_id) {
-            check_int($user_id, 'user_id');
-            $this->user_id = $user_id;
+            $this->user_id = (int)$user_id;
         }
 
         /**
@@ -82,8 +80,7 @@
          * @return void
          */
         public function set_question_id($question_id) {
-            check_int($question_id, 'question_id');
-            $this->question_id = $question_id;
+            $this->question_id = (int)$question_id;
         }
 
         /**
@@ -101,8 +98,7 @@
          * @return string
          */
         public function set_answer_id($answer_id) {
-            check_int($answer_id, 'answer_id');
-            $this->answer_id = $answer_id;
+            $this->answer_id = (int)$answer_id;
         }
 
         /**

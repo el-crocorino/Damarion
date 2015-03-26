@@ -46,8 +46,7 @@
             $this->assertEquals(1, $this->vote->get_question_id());
             $this->assertEquals(1, $this->vote->get_answer_id());
 
-            $this->setExpectedException('dbException');
-            $this->vote->load(9999);
+            $this->assertFalse($this->vote->load(9999));
 
         }
 

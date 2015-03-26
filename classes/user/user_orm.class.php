@@ -13,19 +13,13 @@
          * User id
          * @var int
          */
-        protected $id = NULL;
+        protected $id = 0;
 
         /**
          * User username
          * @var string
          */
         protected $username = '';
-
-        /**
-         * User password
-         * @var string
-         */
-        protected $password = '';
 
         public function __construct() {
             $this->table_prefix_length = strlen(substr(__CLASS__, 0, -4)) + 1;
@@ -37,8 +31,7 @@
          * @return string
          */
         public function set_id($id) {
-            check_int($id, 'id');
-            $this->id = $id;
+            $this->id = (int)$id;
         }
 
         /**
@@ -57,7 +50,6 @@
          * @return void
          */
         public function set_username($username) {
-            check_string($username, 'username');
             $this->username = $username;
         }
 

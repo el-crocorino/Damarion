@@ -13,7 +13,7 @@
          * game id
          * @var int
          */
-        protected $id = NULL;
+        protected $id = 0;
 
         /**
          * game title
@@ -30,20 +30,18 @@
          *
          * @return string
          */
-        public function set_id($id) {
-
-            check_int($id, 'id');
-            $this->id = $id;
-        }
+        /*public function set_id($id) {
+            $this->id = (int)$id;
+        }*/
 
         /**
          * Gets game id
          *
          * @return string
          */
-        public function get_id() {
+        /*public function get_id() {
             return $this->id;
-        }
+        }*/
 
         /**
          * Sets game title
@@ -51,19 +49,18 @@
          * @param string $title
          * @return void
          */
-        public function set_title($title) {
-            check_string($title, 'title');
+        /*public function set_title($title) {
             $this->title = $title;
-        }
+        }*/
 
         /**
          * Gets game title
          *
          * @return string
          */
-        public function get_title() {
+        /*public function get_title() {
             return $this->title;
-        }
+        }*/
 
         /**
          * Loads game from db with id
@@ -71,7 +68,7 @@
          * @param int $id Game id
          * @return void
          */
-        public function load($id) {
+/*        public function load($id) {
 
             check_int($id, 'id');
 
@@ -90,7 +87,7 @@
 
             }
 
-        }
+        }*/
 
         public function load_by_property(string $field, $value = NULL) {
 
@@ -132,18 +129,17 @@
 
         }
 
-        public function save() {
+/*        public function save() {
 
             $db = dbmanager::get_master();
 
-            if (/*game with id already exists*/false) {
+            if (false) {
                 $db->update($this);
             } else {
                 $db->save($this);
             }
 
-
-        }
+        }*/
 
         /**
          *  Gets Object Table

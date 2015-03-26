@@ -59,8 +59,7 @@
             $this->assertFalse($this->answer->get_right());
             $this->assertTrue($this->answer->get_active());
 
-            $this->setExpectedException('dbException');
-            $this->answer->load(9999);
+            $this->assertFalse($this->answer->load(9999));
 
         }
 

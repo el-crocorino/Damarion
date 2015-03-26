@@ -9,6 +9,12 @@
 
     abstract class storable {
 
+        protected $types = array(
+            'boolean' => 'boolean',
+            'integer' => 'int',
+            'string' => 'string'
+            );
+
         /*public function to_array() {
             return $this->process_array(get_object_vars($this));
         }
@@ -30,39 +36,75 @@
             return $array;
         }*/
 
-        /*public function __call($method, $args) {
 
-            $parts = explode('_', $method);
-            $prefix = array_shift($parts);
-            $field = array_pop($parts);
+        /**
+        * Sets membervar / Returns membervar if exist
+        *
+        * @param string $method Method whichs called
+        * @param array $arg Arguments
+        * @return void / $var
+        */
+        public function __call($method, $arg) {
 
-            switch ($prefix) {
+            $var = substr($method, 4);
+dump(get_object_vars($this));
+            if (substr($method, 0, 4) == 'set_' && array_key_exists($var, get_object_vars($this))) {
+                $this->$var = $arg[0];
+            } elseif (substr($method, 0, 4) == 'get_' && array_key_exists($var, get_object_vars($this))) {
+                return $this->$var;
+            } else {
+                throw new rs_basic_exception('Method ' . get_class($this) . '::' . $method . '() does not exist.');
+            }
 
-                case 'get':
+        }
 
-                    if (method_exists($this, $method)) {
-                        return $this->$field;
-                    } else {
-                        throw new NoSuchFieldException('Field ' . $field . ' does not exist in ' . __CLASS__ . ' class.');
-                    }
+        /**
+         * Saves item
+         *
+         * @return void
+         */
+        public function save() {
 
-                    break;
+            $db = dbmanager::get_master();
 
-                case 'set':
+            $res = $db->get_value(get_class($this), $this->get_id());
 
-                    if (method_exists($this, $method)) {
-                        $this->$field = array_shift($args);
-                    } else {
-                        throw new NoSuchFieldException('Field ' . $field . ' does not exist in ' . __CLASS__ . ' class.');
-                    }
+            if (!$res) {
+                $db->save($this);
+            } else {
+                $db->update($this);
+            }
 
-                    break;
+        }
+
+        /**
+         * Loads item from db with id
+         *
+         * @param int $id Game id
+         * @return void
+         */
+        public function load($id) {
+
+            check_int($id, 'id');
+
+            $db = dbmanager::get_slave();
+
+            $data = $db->get_value(get_class($this), $id);
+
+            if (!empty($data)) {
+
+                foreach ($data AS $index => $item) {
+                    $method = 'set_' . substr($index, $this->table_prefix_length);
+                    $this->$method($item);
+                }
 
             }
 
-           return $this->fields[$field];
+        }
 
-        }*/
+        public function get_object_db_fields() {
+
+        }
 
     }
 

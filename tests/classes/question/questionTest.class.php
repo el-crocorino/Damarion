@@ -46,8 +46,7 @@
             $this->assertEquals('Qu\'est-ce qui est petit et marron ?', $this->question->get_text());
             $this->assertEquals(1, $this->question->get_order());
 
-            $this->setExpectedException('dbException');
-            $this->question->load(9999);
+            $this->assertNull($this->question->load(9999));
 
         }
 

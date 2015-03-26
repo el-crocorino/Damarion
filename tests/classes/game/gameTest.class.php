@@ -36,11 +36,25 @@
             $this->assertEquals(1, $this->game->get_id());
             $this->assertEquals('test', $this->game->get_title());
 
-            $this->setExpectedException('dbException');
-            $this->game->load(9999);
+            $this->assertNull($this->game->load(9999));
 
-            /*$this->assertEquals(1, $this->game->get_id());
-            $this->assertEquals('test', $this->game->get_title());*/
+        }
+
+        public function testSave() {
+
+            $this->game->load(1);
+            $this->game->set_title('New test');
+            $this->game->save();
+
+            $this->game->load(1);
+
+            $this->assertEquals(1, $this->game->get_id());
+            $this->assertEquals('New test', $this->game->get_title());
+
+            $this->game2 = new game();
+            $this->game->set_title('test 2');
+            $this->game->save();
+
 
         }
 

@@ -36,8 +36,7 @@
             $this->assertEquals(1, $this->user->get_id());
             $this->assertEquals('olivier', $this->user->get_username());
 
-            $this->setExpectedException('dbException');
-            $this->user->load(9999);
+            $this->assertFalse($this->user->load(9999));
 
         }
 

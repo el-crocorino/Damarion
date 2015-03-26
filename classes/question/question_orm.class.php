@@ -11,27 +11,31 @@
 
         /**
          * question id
+         *
          * @var int
          */
-        protected $id = NULL;
+        protected $id = 0;
 
         /**
          * question game_id
+         *
          * @var int
          */
-        protected $game_id = NULL;
+        protected $game_id = 0;
 
         /**
          * question text
+         *
          * @var string
          */
         protected $text = '';
 
         /**
          * question order
+         *
          * @var int
          */
-        protected $order = NULL;
+        protected $order = 0;
 
         public function __construct() {
             $this->table_prefix_length = strlen(substr(__CLASS__, 0, -4)) + 1;
@@ -43,8 +47,7 @@
          * @return string
          */
         public function set_id($id) {
-            check_int($id, 'id');
-            $this->id = $id;
+            $this->id = (int)$id;
         }
 
         /**
@@ -62,8 +65,7 @@
          * @return string
          */
         public function set_game_id($game_id) {
-            check_int($game_id, 'game_id');
-            $this->game_id = $game_id;
+            $this->game_id = (int)$game_id;
         }
 
         /**
@@ -82,7 +84,6 @@
          * @return void
          */
         public function set_text($text) {
-            check_string($text, 'text');
             $this->text = $text;
         }
 
@@ -98,17 +99,16 @@
         /**
          * Sets question order
          *
-         * @return string
+         * @return int
          */
         public function set_order($order) {
-            check_int($order, 'order');
-            $this->order = $order;
+            $this->order = (int)$order;
         }
 
         /**
          * Gets question order
          *
-         * @return string
+         * @return int
          */
         public function get_order() {
             return $this->order;

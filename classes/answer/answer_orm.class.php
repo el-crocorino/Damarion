@@ -14,14 +14,14 @@
          *
          * @var int
          */
-        protected $id = NULL;
+        protected $id = 0;
 
         /**
          * answer game_id
          *
          * @var int
          */
-        protected $question_id = NULL;
+        protected $question_id = 0;
 
         /**
          * answer text
@@ -35,14 +35,14 @@
          *
          * @var bool
          */
-        protected $right = NULL;
+        protected $right = false;
 
         /**
          * answer active
          *
          * @var bool
          */
-        protected $active = NULL;
+        protected $active = true;
 
         public function __construct() {
             $this->table_prefix_length = strlen(substr(__CLASS__, 0, -4)) + 1;
@@ -54,8 +54,7 @@
          * @return string
          */
         public function set_id($id) {
-            check_int($id, 'id');
-            $this->id = $id;
+            $this->id = (int)$id;
         }
 
         /**
@@ -73,8 +72,7 @@
          * @return string
          */
         public function set_question_id($question_id) {
-            check_int($question_id, 'question_id');
-            $this->question_id = $question_id;
+            $this->question_id = (int)$question_id;
         }
 
         /**
@@ -93,7 +91,6 @@
          * @return void
          */
         public function set_text($text) {
-            check_string($text, 'text');
             $this->text = $text;
         }
 
@@ -112,8 +109,7 @@
          * @return string
          */
         public function set_right($right) {
-            check_bool($right, 'right');
-            $this->right = $right;
+            $this->right = (boolean)$right;
         }
 
         /**
@@ -131,8 +127,7 @@
          * @return string
          */
         public function set_active($active) {
-            check_bool($active, 'active');
-            $this->active = $active;
+            $this->active = (boolean)$active;
         }
 
         /**

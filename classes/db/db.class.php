@@ -54,11 +54,10 @@ class db extends db_orm {
             dump($PDOException->getMessage());
         }
 
-
         $res = $query->fetch(PDO::FETCH_ASSOC);
 
         if (!$res) {
-            throw new dbException("No data available", 1);
+            return array();
         } else {
             return $res;
         }
@@ -78,7 +77,10 @@ class db extends db_orm {
 
     }
 
-    public function update($table = '', $fields = '', $values = '', $where = array()) {
+    public function update($item) {
+
+        $sql = 'UPDATE ' . $item->get_storable_table() . ' SET ';
+        dump($sql);
 
     }
 
