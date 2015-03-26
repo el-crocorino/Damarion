@@ -1,6 +1,13 @@
 <?php
 
-    class user_orm implements storable {
+    class user_orm extends storable {
+
+        /**
+         * Table prefix length description
+         *
+         * @var int
+         */
+        protected $table_prefix_length = NULL;
 
         /**
          * User id
@@ -19,6 +26,10 @@
          * @var string
          */
         protected $password = '';
+
+        public function __construct() {
+            $this->table_prefix_length = strlen(substr(__CLASS__, 0, -4)) + 1;
+        }
 
         /**
          * Sets user id
@@ -60,35 +71,29 @@
         }
 
         /**
-         * Sets user password
+         * Loads user from db with id
          *
-         * @param string $password
+         * @param int $id Game id
          * @return void
          */
-        public function set_password($password) {
-            check_string($password, 'password');
-            $this->password = $password;
-        }
-
-        /**
-         * Gets user password
-         *
-         * @return string
-         */
-        public function get_password() {
-            return $this->password;
-        }
-
-
-        public function load($id, $db) {
+        public function load($id) {
 
             check_int($id, 'id');
 
-            $user_data = $db->get_value('user', $id);
+            $db = dbmanager::get_slave();
 
-            $this->set_id($user_data['id']);
-            $this->set_username($user_data['username']);
-            $this->set_password($user_data['password']);
+            $data = $db->get_value('user', $id);
+
+            foreach ($data AS $index => $item) {
+
+                if (false !== strpos($index, '_id')) {
+                    $item = (int)$item;
+                }
+
+                $method = 'set_' . substr($index, $this->table_prefix_length);
+                $this->$method($item);
+
+            }
 
         }
 

@@ -114,6 +114,12 @@
             return $this->order;
         }
 
+        /**
+         * Loads question from db with id
+         *
+         * @param int $id Question id
+         * @return void
+         */
         public function load($id) {
 
             check_int($id, 'id');
