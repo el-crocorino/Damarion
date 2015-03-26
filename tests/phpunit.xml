@@ -8,6 +8,7 @@
             <directory suffix="Test.class.php">classes/question/</directory>
             <directory suffix="Test.class.php">classes/answer/</directory>
             <directory suffix="Test.class.php">classes/vote/</directory>
+            <directory suffix="Test.class.php">classes/user/</directory>
             <!-- <directory suffix="Test.class.php">classes/application/</directory> -->
             <!-- <directory suffix="Test.class.php">classes/item_list/</directory> -->
             <!-- <directory suffix="Test.class.php">classes/storable/</directory> -->

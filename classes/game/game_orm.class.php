@@ -65,6 +65,12 @@
             return $this->title;
         }
 
+        /**
+         * Loads game from db with id
+         *
+         * @param int $id Game id
+         * @return void
+         */
         public function load($id) {
 
             check_int($id, 'id');
@@ -75,7 +81,7 @@
 
             foreach ($game_data AS $index => $item) {
 
-                if ($index == 'game_id') {
+                if (false !== strpos($index, '_id')) {
                     $item = (int)$item;
                 }
 

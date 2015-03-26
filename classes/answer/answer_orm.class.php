@@ -144,6 +144,12 @@
             return $this->active;
         }
 
+        /**
+         * Loads answer from db with id
+         *
+         * @param int $id Answer id
+         * @return void
+         */
         public function load($id) {
 
             check_int($id, 'id');
@@ -255,7 +261,7 @@
 
             $values = array(
                 ':answer_id' => $this->get_id(),
-                ':answer_game_id' => $this->get_game_id(),
+                ':answer_answer_id' => $this->get_game_id(),
                 ':answer_text' => $this->get_text(),
                 ':answer_right' => $this->get_right(),
                 ':answer_active' => $this->get_active()
