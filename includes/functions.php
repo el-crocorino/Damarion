@@ -172,3 +172,114 @@
 
     }
 
+    /**
+    * Prefixes an array with given prefix
+    *
+    * @param string $prefix Prefix
+    * @param array $array Array to prefix
+    * @param boolean $recursive Optional
+    * @return array Prefixed array
+    */
+    function array_prefix($prefix, $array, $recursive = true) {
+
+        check_string($prefix, 'prefix');
+        check_array($array, 'array');
+        check_bool($recursive, 'recursive');
+
+        $tmp = array();
+
+        foreach ($array AS $key => $value) {
+
+            if (is_int($key) && is_array($value) && $recursive === true) {
+                $tmp[$key] = array_prefix($prefix, $value, $recursive);
+            } elseif (!is_int($key) && is_array($value) && $recursive === true) {
+                $tmp[$prefix . $key] = array_prefix($prefix, $value, $recursive);
+            } elseif (!is_int($key)) {
+                $tmp[$prefix . $key] = $value;
+            } else {
+                $tmp[$key] = $value;
+            }
+
+        }
+
+        return $tmp;
+
+    }
+
+
+    /**
+    * Removes prefixes in array
+    *
+    * @param string $prefix Prefix
+    * @param array $array Prefixed array
+    * @param boolean $recursive Optional
+    * @return array Unfixed array
+    */
+    function array_unfix($prefix, $array, $recursive = true) {
+
+        check_string($prefix, 'prefix');
+        check_array($array, 'array');
+        check_bool($recursive, 'recursive');
+
+        $tmp = array();
+
+        foreach ($array AS $key => $value) {
+
+            if (is_int($key) && is_array($value) && $recursive === true) {
+                $tmp[$key] = array_unfix($prefix, $value, $recursive);
+            } elseif (!is_int($key) && is_array($value) && $recursive === true) {
+
+                if (substr($key, 0, strlen($prefix)) == $prefix) {
+                    $tmp[substr($key, strlen($prefix))] = array_unfix($prefix, $value, $recursive);
+                }
+
+            } elseif (!is_int($key)) {
+
+                if (substr($key, 0, strlen($prefix)) == $prefix) {
+                    $tmp[substr($key, strlen($prefix))] = $value;
+                } else {
+                    $tmp[$key] = $value;
+                }
+
+            } else {
+                $tmp[$key] = $value;
+            }
+
+        }
+
+        return $tmp;
+
+    }
+
+
+    /**
+    * Extracts array items into another array by key prefix
+    *
+    * @param string $prefix Prefix
+    * @param array $array Array
+    * @return array Extracted data
+    */
+    function array_extract($prefix, $array) {
+
+        check_string($prefix, 'prefix');
+        check_array($array, 'array');
+
+        $result = array();
+        $prefix_length = strlen($prefix);
+
+        foreach ($array AS $key => $v) {
+
+            if (substr($key, 0, $prefix_length) == $prefix) {
+                $result[$key] = $value;
+            }
+
+        }
+
+        if (count($result) > 0) {
+            return $result;
+        }
+
+        return NULL;
+
+    }
+

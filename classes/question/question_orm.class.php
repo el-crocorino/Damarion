@@ -3,196 +3,32 @@
     class question_orm extends storable {
 
         /**
-         * Table prefix length description
+         * question id
          *
          * @var int
          */
-        protected $table_prefix_length = NULL;
-
-        /**
-         * question id
-         * @var int
-         */
-        protected $id = NULL;
+        protected $id = 0;
 
         /**
          * question game_id
+         *
          * @var int
          */
-        protected $game_id = NULL;
+        protected $game_id = 0;
 
         /**
          * question text
+         *
          * @var string
          */
         protected $text = '';
 
         /**
          * question order
+         *
          * @var int
          */
-        protected $order = NULL;
-
-        public function __construct() {
-            $this->table_prefix_length = strlen(substr(__CLASS__, 0, -4)) + 1;
-        }
-
-        /**
-         * Sets question id
-         *
-         * @return string
-         */
-        public function set_id($id) {
-            check_int($id, 'id');
-            $this->id = $id;
-        }
-
-        /**
-         * Gets question id
-         *
-         * @return string
-         */
-        public function get_id() {
-            return $this->id;
-        }
-
-        /**
-         * Sets question game_id
-         *
-         * @return string
-         */
-        public function set_game_id($game_id) {
-            check_int($game_id, 'game_id');
-            $this->game_id = $game_id;
-        }
-
-        /**
-         * Gets question game_id
-         *
-         * @return string
-         */
-        public function get_game_id() {
-            return $this->game_id;
-        }
-
-        /**
-         * Sets question text
-         *
-         * @param string $text
-         * @return void
-         */
-        public function set_text($text) {
-            check_string($text, 'text');
-            $this->text = $text;
-        }
-
-        /**
-         * Gets question text
-         *
-         * @return string
-         */
-        public function get_text() {
-            return $this->text;
-        }
-
-        /**
-         * Sets question order
-         *
-         * @return string
-         */
-        public function set_order($order) {
-            check_int($order, 'order');
-            $this->order = $order;
-        }
-
-        /**
-         * Gets question order
-         *
-         * @return string
-         */
-        public function get_order() {
-            return $this->order;
-        }
-
-        /**
-         * Loads question from db with id
-         *
-         * @param int $id Question id
-         * @return void
-         */
-        public function load($id) {
-
-            check_int($id, 'id');
-
-            $db = dbmanager::get_slave();
-
-            $question_data = $db->get_value('question', $id);
-
-            foreach ($question_data AS $index => $item) {
-
-                if (false !== strpos($index, '_id') || false !== strpos($index, '_order')) {
-                    $item = (int)$item;
-                }
-
-                $method = 'set_' . substr($index, $this->table_prefix_length);
-                $this->$method($item);
-
-            }
-
-        }
-
-        public function load_by_property(string $field, $value = NULL) {
-
-            /*check_string($field);
-
-            if is_string($value) {
-                $value = '"' . $value . '"';
-            }
-
-            $this->set_id($question_id);
-
-            $where = array($field . ' = ')
-
-            $db = db::get_slave();
-            $db->get($this->get_storable_table, $this->get_storable_fields);*/
-        }
-
-        public function get($question_id) {
-
-            check_int($question_id, 'question_id');
-
-            $this->set_id($question_id);
-
-            $where = array('question_id = ' . $question_id);
-
-            $db = dbmanager::get_slave();
-            $question_data = $db->get($this->get_storable_table(), $this->get_storable_fields(), $where, array(), array());
-
-            foreach ($question_data AS $index => $item) {
-
-                if ($index == 'question_id') {
-                    $item = (int)$item;
-                }
-
-                $method = 'set_' . substr($index, $this->table_prefix_length);
-                $this->$method($item);
-
-            }
-
-        }
-
-        public function save() {
-
-            $db = dbmanager::get_master();
-
-            if (/*question with id already exists*/false) {
-                $db->update($this);
-            } else {
-                $db->save($this);
-            }
-
-
-        }
+        protected $order = 0;
 
         /**
          *  Gets Object Table
@@ -254,6 +90,22 @@
          * @return array Order
          */
         public function get_storable_order() {
+
+        }
+
+        /**
+         * Converts db results to right type
+         *
+         * @param array $data Db data
+         * @return array
+         */
+        public static function handle_db_data($data) {
+
+            $data['id'] = (int)$data['id'];
+            $data['game_id'] = (int)$data['game_id'];
+            $data['order'] = (int)$data['order'];
+
+            return $data;
 
         }
 
