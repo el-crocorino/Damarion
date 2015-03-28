@@ -5,23 +5,7 @@
     use Doctrine\DBAL\Connection;
     use Damarion\Domain\Game;
 
-    class GameDAO {
-
-        /**
-         * Database connection
-         *
-         * @var \Doctrine\DBAL\Connection
-         */
-        private $db;
-
-        /**
-         * Constructor
-         *
-         * @param \Doctrine\DBAL\Connection The database connection object
-         */
-        public function __construct(Connection $db) {
-            $this->db = $db;
-        }
+    class GameDAO extends DAO {
 
         /**
          * Return a list of all games, sorted by date (most recent first).
@@ -31,7 +15,7 @@
         public function find_all() {
 
             $sql = 'SELECT * FROM game ORDER BY game_id ASC';
-            $result = $this->db->fetchAll($sql);
+            $result = $this->get_db()->fetchAll($sql);
 
             // Convert query result to an array of domain objects
 
@@ -39,7 +23,7 @@
 
             foreach ($result as $row) {
                 $game_id = $row['game_id'];
-                $games[$game_id] = $this->build_game($row);
+                $games[$game_id] = $this->build_domain_object($row);
             }
 
             return $games;
@@ -52,7 +36,7 @@
          * @param array $row The DB row containing Game data.
          * @return \MicroCMS\Domain\Game
          */
-        private function build_game(array $row) {
+        protected function build_domain_object(array $row) {
 
             $game = new Game();
 

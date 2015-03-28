@@ -5,23 +5,7 @@
     use Doctrine\DBAL\Connection;
     use Damarion\Domain\Question;
 
-    class QuestionDAO {
-
-        /**
-         * Database connection
-         *
-         * @var \Doctrine\DBAL\Connection
-         */
-        private $db;
-
-        /**
-         * Constructor
-         *
-         * @param \Doctrine\DBAL\Connection The database connection object
-         */
-        public function __construct(Connection $db) {
-            $this->db = $db;
-        }
+    class QuestionDAO extends DAO {
 
         /**
          * Return a list of all questions, sorted by date (most recent first).
@@ -31,7 +15,7 @@
         public function find_all() {
 
             $sql = 'SELECT * FROM question ORDER BY question_order ASC';
-            $result = $this->db->fetchAll($sql);
+            $result = $this->get_db()->fetchAll($sql);
 
             // Convert query result to an array of domain objects
 
@@ -39,10 +23,30 @@
 
             foreach ($result as $row) {
                 $question_order = $row['question_order'];
-                $questions[$question_order] = $this->build_question($row);
+                $questions[$question_order] = $this->build_domain_object($row);
             }
 
             return $questions;
+
+        }
+
+        /**
+         * Returns a question matching the supplied id.
+         *
+         * @param integer $id
+         *
+         * @return \Damarion\Domain\Question|throws an exception if no matching question is found
+         */
+        public function find($id) {
+
+            $sql = 'SELECT * FROM question WHERE question_id=?';
+            $row = $this->get_db()->fetchAssoc($sql, array($id));
+
+            if ($row) {
+                return $this->build_domain_object($row);
+            } else {
+                throw new \Exception("No question matching id " . $id);
+            }
 
         }
 
@@ -54,9 +58,13 @@
         public function find_current() {
 
             $sql = 'SELECT * FROM question WHERE question_active = 1';
-            $result = $this->db->fetchAssoc($sql);
+            $result = $this->get_db()->fetchAssoc($sql);
 
-            return $this->build_question($result);
+            if ($row) {
+                return $this->build_domain_object($row);
+            } else {
+                throw new \Exception("No question matching id " . $id);
+            }
 
         }
 
@@ -66,7 +74,7 @@
          * @param array $row The DB row containing Question data.
          * @return \MicroCMS\Domain\Question
          */
-        private function build_question(array $row) {
+        protected function build_domain_object(array $row) {
 
             $question = new Question();
 
