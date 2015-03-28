@@ -17,6 +17,13 @@
         protected $game_id = 0;
 
         /**
+         * question active
+         *
+         * @var bool
+         */
+        protected $active = false;
+
+        /**
          * question text
          *
          * @var string
@@ -45,7 +52,7 @@
          * @return string Fields
          */
         public function get_storable_fields() {
-            return 'question_id, question_game_id, question_text, question_order';
+            return 'question_id, question_game_id, question_active, question_text, question_order';
         }
 
         /**
@@ -58,6 +65,7 @@
             $values = array(
                 ':question_id' => $this->get_id(),
                 ':question_game_id' => $this->get_game_id(),
+                ':question_active' => $this->get_active(),
                 ':question_text' => $this->get_text(),
                 ':question_order' => $this->get_order()
             );
@@ -103,6 +111,7 @@
 
             $data['id'] = (int)$data['id'];
             $data['game_id'] = (int)$data['game_id'];
+            $data['active'] = (boolean)$data['active'];
             $data['order'] = (int)$data['order'];
 
             return $data;
