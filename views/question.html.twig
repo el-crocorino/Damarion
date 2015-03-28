@@ -21,7 +21,7 @@
             {% for vote in votes %}
 
                 <tr>
-                    <td>{{ vote.get_user_id }}</td>
+                    <td>{{ vote.get_user.get_username }}</td>
                     <td>{{ vote.get_answer_id }}</td>
                 </tr>
 

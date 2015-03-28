@@ -12,8 +12,17 @@
          */
         private $question_DAO;
 
+        /**
+         * @var \MicroCMS\DAO\QuestionDAO
+         */
+        private $user_DAO;
+
         public function set_question_DAO(QuestionDAO $question_DAO) {
             $this->question_DAO = $question_DAO;
+        }
+
+        public function set_user_DAO(UserDAO $user_DAO) {
+            $this->user_DAO = $user_DAO;
         }
 
         /**
@@ -89,12 +98,24 @@
             $vote->set_user_id($row['vote_user_id']);
             $vote->set_answer_id($row['vote_answer_id']);
 
-            if (array_key_exists('answer_question_id', $row)) {
+            if (array_key_exists('vote_question_id', $row)) {
 
                 // find and set corresponding question
 
-                $answer->set_question_id($row['answer_question_id']);
-                $answer->set_question($this->question_DAO->find($row['answer_question_id']));
+                $vote->set_question_id($row['vote_question_id']);
+                $vote->set_question($this->question_DAO->find($row['vote_question_id']));
+
+            }
+
+            if (array_key_exists('vote_user_id', $row)) {
+
+                // Find and set the associated author
+
+                $user_id = $row['vote_user_id'];
+                $user = $this->user_DAO->find($user_id);
+
+                $vote->set_user_id($row['vote_user_id']);
+                $vote->set_user($user);
 
             }
 

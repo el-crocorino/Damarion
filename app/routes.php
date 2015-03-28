@@ -1,6 +1,6 @@
 <?php
 
-    // Game page
+    // Home page
 
     $app->get('/', function() use ($app) {
 
@@ -21,6 +21,8 @@
 
     });
 
+    // Question Page
+
     $app->get('/question/{question_id}', function($question_id) use ($app) {
 
         $question = $app['dao.question']->find($question_id);
@@ -34,3 +36,14 @@
         ));
 
     });
+
+    // Login Page
+
+    $app->get('/login', function(Request $request) use ($app) {
+
+        return $app['twig']->render('login.html.twig', array(
+            'error' => $app['security.last_error']($request),
+            'last_username' => $app['session']->get('_security.last_username'),
+        ));
+
+    })->bind('login');  // named route so that path('login') works in Twig templates
