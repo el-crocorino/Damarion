@@ -11,15 +11,10 @@
         </header>
 
            <article>
-                <h2>Question <?php echo $question->get_id(); ?> : <?php echo $question->get_text(); ?></h2>
-
-                <?php
-                    foreach ($answers AS $key => $answer) {
-                ?>
-                        <p><?php echo $answer->get_text(); ?></p>
-                <?php
-                    }
-                ?>
+                <h2>Question {{ question.get_id }} : {{ question.get_text }}</h2>
+                {% for answer in answers %}
+                    <p>{{ answer.get_text }}</p>
+                {% endfor %}
             </article>
 
             <?php

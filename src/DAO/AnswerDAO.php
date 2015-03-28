@@ -55,8 +55,8 @@
 
             $sql = 'SELECT * FROM answer WHERE answer_question_id = ' . $question_id;
 
-            if ($active); {
-                $sql .= 'AND answer_active = 1';
+            if ($active) {
+                $sql .= ' AND answer_active = 1';
             }
 
             $result = $this->db->fetchAll($sql);

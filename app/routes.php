@@ -11,10 +11,12 @@
         $users = $app['dao.user']->find_all();
         $votes = $app['dao.vote']->find_all();
 
-        ob_start();             // start buffering HTML output
-        require '../views/view.php';
-        $view = ob_get_clean(); // assign HTML output to $view
-
-        return $view;
+        return $app['twig']->render('index.html.twig', array(
+            'question' => $question,
+            'answers' => $answers,
+            'games' => $games,
+            'users' => $users,
+            'votes' => $votes
+        ));
 
     });
