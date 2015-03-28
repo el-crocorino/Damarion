@@ -40,6 +40,13 @@
         protected $active = true;
 
         /**
+         * Associated question
+         *
+         * @var object question
+         */
+        protected $question = NULL;
+
+        /**
          * Sets id
          *
          * @param int $id
@@ -127,6 +134,24 @@
          */
         public function get_active() {
             return $this->active;
+        }
+
+        /**
+         * Sets question
+         *
+         * @param int $question
+         */
+        public function set_question($question) {
+            $this->question = $question;
+        }
+
+        /**
+         * Gets question
+         *
+         * @return int
+         */
+        public function get_question() {
+            return $this->question;
         }
 
     }

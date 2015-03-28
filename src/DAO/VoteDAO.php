@@ -5,23 +5,7 @@
     use Doctrine\DBAL\Connection;
     use Damarion\Domain\Vote;
 
-    class VoteDAO {
-
-        /**
-         * Database connection
-         *
-         * @var \Doctrine\DBAL\Connection
-         */
-        private $db;
-
-        /**
-         * Constructor
-         *
-         * @param \Doctrine\DBAL\Connection The database connection object
-         */
-        public function __construct(Connection $db) {
-            $this->db = $db;
-        }
+    class VoteDAO extends DAO {
 
         /**
          * Return a list of all votes, sorted by date (most recent first).
@@ -31,7 +15,7 @@
         public function find_all() {
 
             $sql = 'SELECT * FROM vote ORDER BY vote_id ASC';
-            $result = $this->db->fetchAll($sql);
+            $result = $this->get_db()->fetchAll($sql);
 
             // Convert query result to an array of domain objects
 
@@ -39,7 +23,7 @@
 
             foreach ($result as $row) {
                 $vote_id = $row['vote_id'];
-                $votes[$vote_id] = $this->build_vote($row);
+                $votes[$vote_id] = $this->build_domain_object($row);
             }
 
             return $votes;
@@ -52,7 +36,7 @@
          * @param array $row The DB row containing Vote data.
          * @return \MicroCMS\Domain\Vote
          */
-        private function build_vote(array $row) {
+        protected function build_domain_object(array $row) {
 
             $vote = new Vote();
 

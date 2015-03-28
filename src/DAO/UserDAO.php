@@ -5,23 +5,7 @@
     use Doctrine\DBAL\Connection;
     use Damarion\Domain\User;
 
-    class UserDAO {
-
-        /**
-         * Database connection
-         *
-         * @var \Doctrine\DBAL\Connection
-         */
-        private $db;
-
-        /**
-         * Constructor
-         *
-         * @param \Doctrine\DBAL\Connection The database connection object
-         */
-        public function __construct(Connection $db) {
-            $this->db = $db;
-        }
+    class UserDAO extends DAO {
 
         /**
          * Return a list of all users, sorted by date (most recent first).
@@ -31,14 +15,14 @@
         public function find_all() {
 
             $sql = 'SELECT * FROM user ORDER BY user_id ASC';
-            $result = $this->db->fetchAll($sql);
+            $result = $this->get_db()->fetchAll($sql);
 
             // Convert query result to an array of domain objects
 
             $users = array();
 
             foreach ($result as $row) {
-                $users[] = $this->build_user($row);
+                $users[] = $this->build_domain_object($row);
             }
 
             return $users;
@@ -51,7 +35,7 @@
          * @param array $row The DB row containing User data.
          * @return \MicroCMS\Domain\User
          */
-        private function build_user(array $row) {
+        protected function build_domain_object(array $row) {
 
             $user = new User();
 
