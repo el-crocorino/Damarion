@@ -1,20 +1,51 @@
 <!doctype html>
 <html>
     <head>
+
         <meta charset="utf-8" />
-        <link href="damarion.css" rel="stylesheet" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{{ app.request.basepath }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{ app.request.basepath }}/css/damarion.css" rel="stylesheet" />
         <title>Damarion - Home</title>
     </head>
-    <body>
-        <header>
-            <h1>Damarion</h1>
-        </header>
 
-           <article>
+    <body>
+
+        <div class="container">
+
+            <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+
+                <div class="container">
+
+                    <div class="navbar-header">
+
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-taget="#navbar-collapse-target">
+
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+
+                        </button>
+
+                        <a href="/" class="navbar-brand">Damarion</a>
+
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="navbar-collapse-target">
+                    </div>
+
+                </div>
+
+            </nav>
+
+            <article>
+
                 <h2>Question {{ question.get_id }} : {{ question.get_text }}</h2>
                 {% for answer in answers %}
                     <p>{{ answer.get_text }}</p>
                 {% endfor %}
+
             </article>
 
             <?php
@@ -23,8 +54,12 @@
                 var_dump($votes);*/
             ?>
 
-        <footer class="footer">
-            <a href="#">Damarion</a>.
-        </footer>
+            <footer class="footer">
+                <a href="#">Damarion</a>.
+            </footer>
+
+        </div>
+
     </body>
+
 </html>
