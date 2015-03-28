@@ -29,6 +29,13 @@
         protected $answer_id = 0;
 
         /**
+         * Associated question
+         *
+         * @var object question
+         */
+        protected $question = NULL;
+
+        /**
          * Sets id
          *
          * @param int $id
@@ -98,6 +105,24 @@
          */
         public function get_answer_id() {
             return $this->answer_id;
+        }
+
+        /**
+         * Sets question
+         *
+         * @param int $question
+         */
+        public function set_question($question) {
+            $this->question = $question;
+        }
+
+        /**
+         * Gets question
+         *
+         * @return int
+         */
+        public function get_question() {
+            return $this->question;
         }
 
     }

@@ -36,5 +36,7 @@
     });
 
     $app['dao.vote'] = $app->share(function ($app) {
-        return new Damarion\DAO\VoteDAO($app['db']);
+        $voteDAO = new Damarion\DAO\VoteDAO($app['db']);
+        $voteDAO->set_question_DAO($app['dao.question']);
+        return $voteDAO;
     });

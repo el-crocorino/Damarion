@@ -25,10 +25,12 @@
 
         $question = $app['dao.question']->find($question_id);
         $answers = $app['dao.answer']->find_all_by_question($question_id);
+        $votes = $app['dao.vote']->find_all_by_question($question_id);
 
         return $app['twig']->render('question.html.twig', array(
             'question' => $question,
-            'answers' => $answers
+            'answers' => $answers,
+            'votes' => $votes
         ));
 
     });
