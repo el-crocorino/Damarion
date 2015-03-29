@@ -72,7 +72,7 @@
          * Creates an Question object based on a DB row.
          *
          * @param array $row The DB row containing Question data.
-         * @return \MicroCMS\Domain\Question
+         * @return \Damarion\Domain\Question
          */
         protected function build_domain_object(array $row) {
 

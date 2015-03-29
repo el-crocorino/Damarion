@@ -2,7 +2,7 @@
 
     namespace Damarion\DAO;
 
-    use Doctrine\DBAL\Connection;
+    #use Doctrine\DBAL\Connection;
     use Symfony\Component\Security\Core\User\UserInterface;
     use Symfony\Component\Security\Core\User\UserProviderInterface;
     use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -38,7 +38,7 @@
          *
          * @param integer $id The user id.
          *
-         * @return \MicroCMS\Domain\User|throws an exception if no matching user is found
+         * @return \Damarion\Domain\User|throws an exception if no matching user is found
          */
         public function find($id) {
 
@@ -87,14 +87,14 @@
          * {@inheritDoc}
          */
         public function supportsClass($class) {
-            return 'MicroCMS\Domain\User' === $class;
+            return 'Damarion\Domain\User' === $class;
         }
 
         /**
          * Creates an User object based on a DB row.
          *
          * @param array $row The DB row containing User data.
-         * @return \MicroCMS\Domain\User
+         * @return \Damarion\Domain\User
          */
         protected function build_domain_object(array $row) {
 

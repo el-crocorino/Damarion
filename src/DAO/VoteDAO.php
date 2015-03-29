@@ -8,19 +8,28 @@
     class VoteDAO extends DAO {
 
         /**
-         * @var \MicroCMS\DAO\QuestionDAO
+         * @var \Damarion\DAO\QuestionDAO
          */
         private $question_DAO;
 
         /**
-         * @var \MicroCMS\DAO\QuestionDAO
+         * @var \Damarion\DAO\QuestionDAO
          */
         private $user_DAO;
 
+        /**
+         * Sets question DAO
+         *
+         * @param QuestionDAO $question_DAO
+         */
         public function set_question_DAO(QuestionDAO $question_DAO) {
             $this->question_DAO = $question_DAO;
         }
-
+        /**
+         * Sets user DAO
+         *
+         * @param USERDAO $user_DAO
+         */
         public function set_user_DAO(UserDAO $user_DAO) {
             $this->user_DAO = $user_DAO;
         }
@@ -88,7 +97,7 @@
          * Creates an Vote object based on a DB row.
          *
          * @param array $row The DB row containing Vote data.
-         * @return \MicroCMS\Domain\Vote
+         * @return \Damarion\Domain\Vote
          */
         protected function build_domain_object(array $row) {
 

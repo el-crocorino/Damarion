@@ -8,7 +8,7 @@
     class AnswerDAO extends DAO {
 
         /**
-         * @var \MicroCMS\DAO\QuestionDAO
+         * @var \Damarion\DAO\QuestionDAO
          */
         private $question_DAO;
 
@@ -106,7 +106,7 @@
          * Creates an Answer object based on a DB row.
          *
          * @param array $row The DB row containing Answer data.
-         * @return \MicroCMS\Domain\Answer
+         * @return \Damarion\Domain\Answer
          */
         protected function build_domain_object(array $row) {
 
