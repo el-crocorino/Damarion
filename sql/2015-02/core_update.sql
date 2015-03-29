@@ -100,16 +100,23 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_username` varchar(60) NOT NULL,
+  `user_password` varchar(88) NOT NULL,
+  `user_salt` varchar(23) NOT NULL,
+  `user_role` varchar(50) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_username`) VALUES
-(1, 'olivier'),
-(2, 'estelle');
+INSERT INTO `user` (`user_id`, `user_username`, `user_password`, `user_salt`, `user_role`) VALUES
+-- Raw password is john
+(1, 'olivier', 'L2nNR5hIcinaJkKR+j4baYaZjcHS0c3WX2gjYF6Tmgl1Bs+C9Qbr+69X8eQwXDvw0vp73PrcSeT0bGEW5+T2hA==', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER'),
+(2, 'estelle', 'L2nNR5hIcinaJkKR+j4baYaZjcHS0c3WX2gjYF6Tmgl1Bs+C9Qbr+69X8eQwXDvw0vp73PrcSeT0bGEW5+T2hA==', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER'),
+(3, 'JohnDoe', 'L2nNR5hIcinaJkKR+j4baYaZjcHS0c3WX2gjYF6Tmgl1Bs+C9Qbr+69X8eQwXDvw0vp73PrcSeT0bGEW5+T2hA==', 'YcM=A$nsYzkyeDVjEUa7W9K', 'ROLE_USER'),
+-- Raw password is jane
+(4, 'JaneDoe', 'EfakNLxyhHy2hVJlxDmVNl1pmgjUZl99gtQ+V3mxSeD8IjeZJ8abnFIpw9QNahwAlEaXBiQUBLXKWRzOmSr8HQ==', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
 
 -- --------------------------------------------------------
 
@@ -134,4 +141,8 @@ INSERT INTO `vote` (`vote_id`, `vote_user_id`, `vote_question_id`, `vote_answer_
 (1, 1, 1, 1),
 (2, 1, 2, 3),
 (3, 2, 1, 2),
-(4, 2, 2, 4);
+(4, 2, 2, 4),
+(5, 3, 1, 4),
+(6, 3, 2, 3),
+(7, 4, 1, 2),
+(8, 4, 2, 1);

@@ -8,12 +8,30 @@
     class VoteDAO extends DAO {
 
         /**
-         * @var \MicroCMS\DAO\QuestionDAO
+         * @var \Damarion\DAO\QuestionDAO
          */
         private $question_DAO;
 
+        /**
+         * @var \Damarion\DAO\QuestionDAO
+         */
+        private $user_DAO;
+
+        /**
+         * Sets question DAO
+         *
+         * @param QuestionDAO $question_DAO
+         */
         public function set_question_DAO(QuestionDAO $question_DAO) {
             $this->question_DAO = $question_DAO;
+        }
+        /**
+         * Sets user DAO
+         *
+         * @param USERDAO $user_DAO
+         */
+        public function set_user_DAO(UserDAO $user_DAO) {
+            $this->user_DAO = $user_DAO;
         }
 
         /**
@@ -79,7 +97,7 @@
          * Creates an Vote object based on a DB row.
          *
          * @param array $row The DB row containing Vote data.
-         * @return \MicroCMS\Domain\Vote
+         * @return \Damarion\Domain\Vote
          */
         protected function build_domain_object(array $row) {
 
@@ -89,12 +107,24 @@
             $vote->set_user_id($row['vote_user_id']);
             $vote->set_answer_id($row['vote_answer_id']);
 
-            if (array_key_exists('answer_question_id', $row)) {
+            if (array_key_exists('vote_question_id', $row)) {
 
                 // find and set corresponding question
 
-                $answer->set_question_id($row['answer_question_id']);
-                $answer->set_question($this->question_DAO->find($row['answer_question_id']));
+                $vote->set_question_id($row['vote_question_id']);
+                $vote->set_question($this->question_DAO->find($row['vote_question_id']));
+
+            }
+
+            if (array_key_exists('vote_user_id', $row)) {
+
+                // Find and set the associated author
+
+                $user_id = $row['vote_user_id'];
+                $user = $this->user_DAO->find($user_id);
+
+                $vote->set_user_id($row['vote_user_id']);
+                $vote->set_user($user);
 
             }
 

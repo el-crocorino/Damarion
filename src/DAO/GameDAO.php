@@ -34,7 +34,7 @@
          * Creates an Game object based on a DB row.
          *
          * @param array $row The DB row containing Game data.
-         * @return \MicroCMS\Domain\Game
+         * @return \Damarion\Domain\Game
          */
         protected function build_domain_object(array $row) {
 

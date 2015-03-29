@@ -36,6 +36,13 @@
         protected $question = NULL;
 
         /**
+         * Associated user
+         *
+         * @var object user
+         */
+        protected $user = NULL;
+
+        /**
          * Sets id
          *
          * @param int $id
@@ -123,6 +130,24 @@
          */
         public function get_question() {
             return $this->question;
+        }
+
+        /**
+         * Sets user
+         *
+         * @param int $user
+         */
+        public function set_user($user) {
+            $this->user = $user;
+        }
+
+        /**
+         * Gets user
+         *
+         * @return int
+         */
+        public function get_user() {
+            return $this->user;
         }
 
     }
