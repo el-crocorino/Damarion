@@ -40,6 +40,26 @@
         }
 
         /**
+         * Returns a answer matching the supplied id.
+         *
+         * @param integer $id The answer id.
+         *
+         * @return \Damarion\Domain\User|throws an exception if no matching answer is found
+         */
+        public function find($id) {
+
+            $sql = "select * from answer where answer_id=?";
+            $row = $this->get_db()->fetchAssoc($sql, array($id));
+
+            if ($row) {
+                return $this->build_domain_object($row);
+            } else {
+                throw new \Exception("No answer matching id " . $id);
+            }
+
+        }
+
+        /**
          * Return a list of all answers, sorted by date (most recent first).
          *
          * @return array A list of all answers.

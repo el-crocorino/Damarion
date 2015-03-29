@@ -13,9 +13,14 @@
         private $question_DAO;
 
         /**
-         * @var \Damarion\DAO\QuestionDAO
+         * @var \Damarion\DAO\UserDAO
          */
         private $user_DAO;
+
+        /**
+         * @var \Damarion\DAO\AnswerDAO
+         */
+        private $answer_DAO;
 
         /**
          * Sets question DAO
@@ -25,6 +30,7 @@
         public function set_question_DAO(QuestionDAO $question_DAO) {
             $this->question_DAO = $question_DAO;
         }
+
         /**
          * Sets user DAO
          *
@@ -32,6 +38,15 @@
          */
         public function set_user_DAO(UserDAO $user_DAO) {
             $this->user_DAO = $user_DAO;
+        }
+
+        /**
+         * Sets answer DAO
+         *
+         * @param USERDAO $answer_DAO
+         */
+        public function set_answer_DAO(AnswerDAO $answer_DAO) {
+            $this->answer_DAO = $answer_DAO;
         }
 
         /**
@@ -104,8 +119,6 @@
             $vote = new Vote();
 
             $vote->set_id($row['vote_id']);
-            $vote->set_user_id($row['vote_user_id']);
-            $vote->set_answer_id($row['vote_answer_id']);
 
             if (array_key_exists('vote_question_id', $row)) {
 
@@ -128,8 +141,52 @@
 
             }
 
+            if (array_key_exists('vote_answer_id', $row)) {
+
+                // Find and set the associated author
+
+                $answer_id = $row['vote_answer_id'];
+                $answer = $this->answer_DAO->find($answer_id);
+
+                $vote->set_answer_id($row['vote_answer_id']);
+                $vote->set_answer($answer);
+
+            }
+
             return $vote;
 
+        }
+
+        /**
+         * Saves a vote into the database.
+         *
+         * @param \Damrion\Domain\Comment $vote The vote to save
+         */
+        public function save(Vote $vote) {
+
+            $voteData = array(
+                'vote_question_id' => $vote->get_question()->get_id(),
+                'vote_user_id' => $vote->get_user()->get_id(),
+                'vote_answer_id' => $vote->get_answer_id()
+                );
+
+            if ($vote->get_id()) {
+//Todo : Retun info message
+                // The vote has already been saved : update it
+
+                #$this->get_db()->update('t_vote', $voteData, array('com_id' => $vote->get_id()));
+
+            } else {
+
+                // The vote has never been saved : insert it
+
+                $this->get_db()->insert('vote', $voteData);
+
+                // Get the id of the newly created vote and set it on the entity.
+
+                $id = $this->get_db()->lastInsertId();
+                $vote->set_id($id);
+            }
         }
 
     }
