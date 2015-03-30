@@ -43,6 +43,13 @@
         protected $user = NULL;
 
         /**
+         * Associated answer
+         *
+         * @var object answer
+         */
+        protected $answer = NULL;
+
+        /**
          * Sets id
          *
          * @param int $id
@@ -115,6 +122,24 @@
         }
 
         /**
+         * Sets answer id
+         *
+         * @param int $answer_id
+         */
+        public function setAnswerId($answer_id) {
+            $this->answer_id = $answer_id;
+        }
+
+        /**
+         * Gets answer id
+         *
+         * @return int
+         */
+        public function getAnswerId() {
+            return $this->answer_id;
+        }
+
+        /**
          * Sets question
          *
          * @param int $question
@@ -148,6 +173,24 @@
          */
         public function get_user() {
             return $this->user;
+        }
+
+        /**
+         * Sets answer
+         *
+         * @param int $answer
+         */
+        public function set_answer($answer) {
+            $this->answer = $answer;
+        }
+
+        /**
+         * Gets answer
+         *
+         * @return int
+         */
+        public function get_answer() {
+            return $this->answer;
         }
 
     }

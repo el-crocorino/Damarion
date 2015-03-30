@@ -13,9 +13,14 @@
         private $question_DAO;
 
         /**
-         * @var \Damarion\DAO\QuestionDAO
+         * @var \Damarion\DAO\UserDAO
          */
         private $user_DAO;
+
+        /**
+         * @var \Damarion\DAO\AnswerDAO
+         */
+        private $answer_DAO;
 
         /**
          * Sets question DAO
@@ -25,6 +30,7 @@
         public function set_question_DAO(QuestionDAO $question_DAO) {
             $this->question_DAO = $question_DAO;
         }
+
         /**
          * Sets user DAO
          *
@@ -32,6 +38,15 @@
          */
         public function set_user_DAO(UserDAO $user_DAO) {
             $this->user_DAO = $user_DAO;
+        }
+
+        /**
+         * Sets answer DAO
+         *
+         * @param USERDAO $answer_DAO
+         */
+        public function set_answer_DAO(AnswerDAO $answer_DAO) {
+            $this->answer_DAO = $answer_DAO;
         }
 
         /**
@@ -70,8 +85,45 @@
 
             $question = $this->question_DAO->find($question_id);
 
-            $sql = "select vote_id, vote_user_id, vote_answer_id from vote where vote_question_id=? order by vote_id";
+            $sql = "SELECT vote_id, vote_user_id, vote_answer_id FROM vote WHERE vote_question_id=? ORDER BY vote_id";
             $result = $this->get_db()->fetchAll($sql, array($question_id));
+
+            // Convert query result to an array of domain objects
+
+            $votes = array();
+
+            foreach ($result as $row) {
+
+                $vote = $this->build_domain_object($row);
+
+                // The associated question is defined for the constructed vote
+
+                $vote->set_question_id($question->get_id());
+                $vote->set_question($question);
+                $votes[] = $vote;
+
+            }
+
+            return $votes;
+
+        }
+
+        /**
+         * Return a list of all votes for a question / user tuple
+         *
+         * @param integer $question_id The question id.
+         * @param integer $user_id The user id.
+         *
+         * @return array A list of all votes for the question.
+         */
+        public function find_all_by_question_and_user($question_id, $user_id) {
+
+            // The associated question is retrieved only once
+
+            $question = $this->question_DAO->find($question_id);
+
+            $sql = "SELECT vote_id, vote_user_id, vote_answer_id FROM vote WHERE vote_question_id=? AND vote_user_id=? ORDER BY vote_id";
+            $result = $this->get_db()->fetchAll($sql, array($question_id, $user_id));
 
             // Convert query result to an array of domain objects
 
@@ -104,8 +156,6 @@
             $vote = new Vote();
 
             $vote->set_id($row['vote_id']);
-            $vote->set_user_id($row['vote_user_id']);
-            $vote->set_answer_id($row['vote_answer_id']);
 
             if (array_key_exists('vote_question_id', $row)) {
 
@@ -128,7 +178,53 @@
 
             }
 
+            if (array_key_exists('vote_answer_id', $row)) {
+
+                // Find and set the associated author
+
+                $answer_id = $row['vote_answer_id'];
+                $answer = $this->answer_DAO->find($answer_id);
+
+                $vote->set_answer_id($row['vote_answer_id']);
+                $vote->set_answer($answer);
+
+            }
+
             return $vote;
+
+        }
+
+        /**
+         * Saves a vote into the database.
+         *
+         * @param \Damrion\Domain\Comment $vote The vote to save
+         */
+        public function save(Vote $vote) {
+
+            $voteData = array(
+                'vote_question_id' => $vote->get_question()->get_id(),
+                'vote_user_id' => $vote->get_user()->get_id(),
+                'vote_answer_id' => $vote->get_answer_id()
+                );
+
+            $user_vote = $this->find_all_by_question_and_user($vote->get_question()->get_id(), $vote->get_user()->get_id());
+
+            if (count($user_vote) > 0) {
+                return false;
+            } else {
+
+                // The vote has never been saved : insert it
+
+                $this->get_db()->insert('vote', $voteData);
+
+                // Get the id of the newly created vote and set it on the entity.
+
+                $id = $this->get_db()->lastInsertId();
+                $vote->set_id($id);
+
+                return true;
+
+            }
 
         }
 

@@ -29,6 +29,8 @@
             ),
         ),
     ));
+    $app->register(new Silex\Provider\FormServiceProvider());
+    $app->register(new Silex\Provider\TranslationServiceProvider());
 
     // Register services.
 
@@ -54,5 +56,6 @@
         $voteDAO = new Damarion\DAO\VoteDAO($app['db']);
         $voteDAO->set_question_DAO($app['dao.question']);
         $voteDAO->set_user_DAO($app['dao.user']);
+        $voteDAO->set_answer_DAO($app['dao.answer']);
         return $voteDAO;
     });
