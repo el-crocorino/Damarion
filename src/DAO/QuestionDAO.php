@@ -69,6 +69,22 @@
         }
 
         /**
+         * Return an array of votes stats for given question id.
+         *
+         * @param int $question_id
+         * @return array A list of all questions.
+         */
+        public function get_stats_by_question($question_id) {
+
+            $sql = 'SELECT vote_answer_id, answer_text, vote_question_id, COUNT( vote_user_id ) AS votes FROM vote LEFT JOIN answer ON ( vote_answer_id = answer_id ) WHERE vote_question_id = ' . $question_id . ' GROUP BY vote_answer_id';
+
+            $result = $this->get_db()->fetchAll($sql);
+
+            return $result;
+
+        }
+
+        /**
          * Creates an Question object based on a DB row.
          *
          * @param array $row The DB row containing Question data.

@@ -7,58 +7,67 @@
     <article>
 
         <h2>Question {{ question.get_id }} : {{ question.get_text }}</h2>
-        {% for answer in answers %}
-            <p>{{ answer.get_text }}</p>
-        {% endfor %}
 
-        <table>
+        <h3>Vote</h3>
 
-            <tr>
-                <th>User</th>
-                <th>Answer</th>
-            </tr>
+        {% if voteForm %}
 
-            {% for vote in votes %}
-
-                <tr>
-                    <td>{{ vote.get_user.get_username }}</td>
-                    <td>{{ vote.get_answer.get_text }}</td>
-                </tr>
-
+            {% if has_voted %}
+                Vous avez déjà voté.
+            {% else %}
+            {{ form_start(voteForm) }}
+                <div class="form-group">
+                    {{ form_errors(voteForm.answer_id) }}
+                    {{ dump(form_widget(voteForm.answer_id)) }}
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Vote" />
+                </div>
+            {{ form_end(voteForm) }}
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
             {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-error">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% endif %}
 
-        </table>
-
-    <h3>Vote</h3>
-    {% if voteForm %}
-        {{ form_start(voteForm) }}
-            <div class="form-group">
-                {{ form_errors(voteForm.answer_id) }}
-                {{ form_widget(voteForm.answer_id, { 'attr':  {
-                    'rows': '4',
-                    'class': 'form-control',
-                    'placeholder': 'Enter your vote'
-                }}) }}
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Vote" />
-            </div>
-        {{ form_end(voteForm) }}
-        {% for flashMessage in app.session.flashbag.get('success') %}
-            <div class="alert alert-success">
-                {{ flashMessage }}
-            </div>
-        {% endfor %}
-    {% else %}
-        <a href="{{ path('login') }} ">Log in</a> to add votes.
-    {% endif %}
+        {% else %}
+            <a href="{{ path('login') }} ">Connectez-vous</a> pour pouvoir voter.
+        {% endif %}
 
     </article>
 
-    <?php
-        /*var_dump($games);
-        var_dump($users);
-        var_dump($votes);*/
-    ?>
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
+
+{% verbatim %}
+
+    <script type="text/javascript">
+
+        $(function() {
+
+            $('#container').highcharts({
+
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+
+            });
+
+        });
+
+    </script>
+
+{% endverbatim %}
 
 {% endblock %}

@@ -5,19 +5,24 @@
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilderInterface;
 
-    class CommentType extends AbstractType {
+    class VoteType extends AbstractType {
 
         public function buildForm(FormBuilderInterface $builder, array $options) {
-            $builder->add('content', 'textarea')
-                    ->add('answer_id', 'choice', array(
-                         'choices' => $answers,
-                         'expanded' => true,
-                         'multiple' => false
-                    ));
+
+            $builder->add('answer_id', 'choice', array(
+                 'choices' => $options['data'],
+                 'expanded' => true,
+                 'multiple' => false
+            ));
+
         }
 
         public function getName() {
             return 'vote';
+        }
+
+        public function handleRequest() {
+
         }
 
     }

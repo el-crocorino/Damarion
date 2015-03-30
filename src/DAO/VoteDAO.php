@@ -85,8 +85,45 @@
 
             $question = $this->question_DAO->find($question_id);
 
-            $sql = "select vote_id, vote_user_id, vote_answer_id from vote where vote_question_id=? order by vote_id";
+            $sql = "SELECT vote_id, vote_user_id, vote_answer_id FROM vote WHERE vote_question_id=? ORDER BY vote_id";
             $result = $this->get_db()->fetchAll($sql, array($question_id));
+
+            // Convert query result to an array of domain objects
+
+            $votes = array();
+
+            foreach ($result as $row) {
+
+                $vote = $this->build_domain_object($row);
+
+                // The associated question is defined for the constructed vote
+
+                $vote->set_question_id($question->get_id());
+                $vote->set_question($question);
+                $votes[] = $vote;
+
+            }
+
+            return $votes;
+
+        }
+
+        /**
+         * Return a list of all votes for a question / user tuple
+         *
+         * @param integer $question_id The question id.
+         * @param integer $user_id The user id.
+         *
+         * @return array A list of all votes for the question.
+         */
+        public function find_all_by_question_and_user($question_id, $user_id) {
+
+            // The associated question is retrieved only once
+
+            $question = $this->question_DAO->find($question_id);
+
+            $sql = "SELECT vote_id, vote_user_id, vote_answer_id FROM vote WHERE vote_question_id=? AND vote_user_id=? ORDER BY vote_id";
+            $result = $this->get_db()->fetchAll($sql, array($question_id, $user_id));
 
             // Convert query result to an array of domain objects
 
@@ -170,12 +207,10 @@
                 'vote_answer_id' => $vote->get_answer_id()
                 );
 
-            if ($vote->get_id()) {
-//Todo : Retun info message
-                // The vote has already been saved : update it
+            $user_vote = $this->find_all_by_question_and_user($vote->get_question()->get_id(), $vote->get_user()->get_id());
 
-                #$this->get_db()->update('t_vote', $voteData, array('com_id' => $vote->get_id()));
-
+            if (count($user_vote) > 0) {
+                return false;
             } else {
 
                 // The vote has never been saved : insert it
@@ -186,7 +221,11 @@
 
                 $id = $this->get_db()->lastInsertId();
                 $vote->set_id($id);
+
+                return true;
+
             }
+
         }
 
     }

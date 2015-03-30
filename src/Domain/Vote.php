@@ -122,6 +122,24 @@
         }
 
         /**
+         * Sets answer id
+         *
+         * @param int $answer_id
+         */
+        public function setAnswerId($answer_id) {
+            $this->answer_id = $answer_id;
+        }
+
+        /**
+         * Gets answer id
+         *
+         * @return int
+         */
+        public function getAnswerId() {
+            return $this->answer_id;
+        }
+
+        /**
          * Sets question
          *
          * @param int $question
