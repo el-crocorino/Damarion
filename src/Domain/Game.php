@@ -53,24 +53,6 @@
         }
 
         /**
-         * Sets id
-         *
-         * @param int $id
-         */
-        public function setId($id) {
-            $this->id = $id;
-        }
-
-        /**
-         * Gets id
-         *
-         * @return int
-         */
-        public function getId() {
-            return $this->id;
-        }
-
-        /**
          * Sets title
          *
          * @param int $title

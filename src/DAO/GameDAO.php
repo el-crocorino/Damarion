@@ -91,7 +91,7 @@
                 // Get the id of the newly created game and set it on the entity.
 
                 $id = $this->get_db()->lastInsertId();
-                $game->setId($id);
+                $game->set_id($id);
             }
 
         }

@@ -110,4 +110,52 @@
 
         }
 
+        /**
+         * Saves a user into the database.
+         *
+         * @param \Damarion\Domain\User $user The user to save
+         */
+        public function save(User $user) {
+
+            $userData = array(
+                'user_username' => $user->get_username(),
+                'user_salt' => $user->get_salt(),
+                'user_password' => $user->get_password(),
+                'user_role' => $user->get_role()
+            );
+
+            if ($user->get_id()) {
+
+                // The user has already been saved : update it
+
+                $this->get_db()->update('user', $userData, array('user_id' => $user->get_id()));
+
+            } else {
+
+                // The user has never been saved : insert it
+
+                $this->get_db()->insert('user', $userData);
+
+                // Get the id of the newly created user and set it on the entity.
+
+                $id = $this->get_db()->lastInsertId();
+                $user->set_id($id);
+
+            }
+
+        }
+
+        /**
+         * Removes a user from the database.
+         *
+         * @param @param integer $id The user id.
+         */
+        public function delete($id) {
+
+            // Delete the user
+
+            $this->get_db()->delete('user', array('user_id' => $id));
+
+        }
+
     }

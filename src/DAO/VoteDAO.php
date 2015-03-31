@@ -228,4 +228,13 @@
 
         }
 
+        /**
+         * Removes all votes for a user
+         *
+         * @param integer $userId The id of the user
+         */
+        public function delete_all_by_user($userId) {
+            $this->get_db()->delete('vote', array('vote_user_id' => $userId));
+        }
+
     }

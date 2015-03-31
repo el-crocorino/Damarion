@@ -133,6 +133,15 @@
     }
 
     /**
+     * Sets username
+     *
+     * @param int $username
+     */
+    public function setUsername($username) {
+        $this->username = $username;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getUsername() {
@@ -147,10 +156,28 @@
     }
 
     /**
+     * Sets password
+     *
+     * @param string $password
+     */
+    public function setPassword($password) {
+        $this->password = $password;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getSalt() {
         return $this->salt;
+    }
+
+    /**
+     * Sets salt
+     *
+     * @param string $salt
+     */
+    public function setSalt($salt) {
+        $this->salt = $salt;
     }
 
     /**
@@ -165,6 +192,15 @@
      */
     public function getRole() {
         return $this->role;
+    }
+
+    /**
+     * Sets role
+     *
+     * @param string $role
+     */
+    public function setRole($role) {
+        $this->role = $role;
     }
 
     /**
