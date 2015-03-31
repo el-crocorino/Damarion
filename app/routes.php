@@ -134,3 +134,22 @@
         ));
 
     })->bind('login');  // named route so that path('login') works in Twig templates
+
+    // Admin home page
+
+    $app->get('/admin', function() use ($app) {
+
+        $games = $app['dao.game']->find_all();
+        $questions = $app['dao.question']->find_all();
+        $answers = $app['dao.answer']->find_all();
+        $votes = $app['dao.vote']->find_all();
+        $users = $app['dao.user']->find_all();
+
+        return $app['twig']->render('admin.html.twig', array(
+            'games' => $games,
+            'questions' => $questions,
+            'answers' => $answers,
+            'votes' => $votes,
+            'users' => $users
+        ));
+    });

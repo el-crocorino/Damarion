@@ -31,6 +31,25 @@
         }
 
         /**
+         * Returns a game matching the supplied id.
+         *
+         * @param integer $id
+         * @return \MicroCMS\Domain\Article|throws an exception if no matching game is found
+         */
+        public function find($id) {
+
+            $sql = "select * from game where game_id=?";
+            $row = $this->getDb()->fetchAssoc($sql, array($id));
+
+            if ($row) {
+                return $this->build_domain_object($row);
+            } else {
+                throw new \Exception("No game matching id " . $id);
+            }
+
+        }
+
+        /**
          * Creates an Game object based on a DB row.
          *
          * @param array $row The DB row containing Game data.

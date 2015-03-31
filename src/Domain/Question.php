@@ -40,6 +40,13 @@
         protected $order = 0;
 
         /**
+         * question order
+         *
+         * @var int
+         */
+        protected $game = 0;
+
+        /**
          * Sets Id
          *
          * @param int $id
@@ -127,6 +134,24 @@
          */
         public function get_order() {
             return $this->order;
+        }
+
+        /**
+         * Sets game
+         *
+         * @param int $game
+         */
+        public function set_game($game) {
+            $this->game = $game;
+        }
+
+        /**
+         * Gets game
+         *
+         * @return int
+         */
+        public function get_game() {
+            return $this->game;
         }
 
     }
