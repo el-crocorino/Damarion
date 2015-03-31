@@ -25,6 +25,16 @@
 
     });
 
+    $app->get('/hashpwd', function() use ($app) {
+
+        $rawPassword = '<?admin?>';
+        $salt = '%qUgq3NAYfC1MKwrW?yevbE';
+        $encoder = $app['security.encoder.digest'];
+
+        return $encoder->encodePassword($rawPassword, $salt);
+
+    });
+
     // Question Page
 
     /*$app->get('/question/{question_id}', function($question_id) use ($app) {
@@ -54,13 +64,12 @@
 
         $user = $app['security']->getToken()->getUser();
 
-        $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
-
         $voteFormView = null;
+        $has_voted = false;
 
         if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
 
-            // A user is fully authenticated : he can add votes
+            // A user is fully authenticated : he can add and see votes
 
             $vote = new Vote();
 
@@ -87,6 +96,8 @@
             }
 
             $voteFormView = $voteForm->createView();
+
+            $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
 
         }
 

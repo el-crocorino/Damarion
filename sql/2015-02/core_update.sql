@@ -118,6 +118,12 @@ INSERT INTO `user` (`user_id`, `user_username`, `user_password`, `user_salt`, `u
 -- Raw password is jane
 (4, 'JaneDoe', 'EfakNLxyhHy2hVJlxDmVNl1pmgjUZl99gtQ+V3mxSeD8IjeZJ8abnFIpw9QNahwAlEaXBiQUBLXKWRzOmSr8HQ==', 'dhMTBkzwDKxnD;4KNs,4ENy', 'ROLE_USER');
 
+-- Raw password is <?admin?>
+INSERT INTO `user` ( `user_username` , `user_password` , `user_salt` , `user_role` )
+VALUES (
+'admin', 'odcRJHrXoehTyFydjKy/bZHjPnjOa+QRc0VBwlRsbedQnfaL+2EdJdhqa6EtAImi6gf8M7+Y7cmJYKRTyZfi0w==', '%qUgq3NAYfC1MKwrW?yevbE', 'ROLE_ADMIN'
+)
+
 -- --------------------------------------------------------
 
 --
