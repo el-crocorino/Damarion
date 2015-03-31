@@ -32,7 +32,7 @@
 
             foreach ($result as $row) {
                 $question_order = $row['question_order'];
-                $questions[$question_order] = $this->build_domain_object($row);
+                $questions[$question_order] = $this->buildDomainObject($row);
             }
 
             return $questions;
@@ -54,7 +54,7 @@
             // The game won't be retrieved during domain objet construction
 
             $sql = "select question_id, question_active, question_text, question_order from question where game_id=? order by question_id";
-            $result = $this->getDb()->fetchAll($sql, array($game_id));
+            $result = $this->get_db()->fetchAll($sql, array($game_id));
 
             // Convert query result to an array of domain objects
 
@@ -62,13 +62,13 @@
 
             foreach ($result as $row) {
 
-                $question_id = $row['question_id'];
+                $question_order = $row['question_order'];
                 $question = $this->buildDomainObject($row);
 
                 // The associated game is defined for the constructed question
 
                 $question->setArticle($game);
-                $questions[$question_id] = $question;
+                $questions[$question_order] = $question;
 
             }
 
@@ -89,7 +89,7 @@
             $row = $this->get_db()->fetchAssoc($sql, array($id));
 
             if ($row) {
-                return $this->build_domain_object($row);
+                return $this->buildDomainObject($row);
             } else {
                 throw new \Exception("No question matching id " . $id);
             }
@@ -107,7 +107,7 @@
             $result = $this->get_db()->fetchAssoc($sql);
 
             if ($row) {
-                return $this->build_domain_object($row);
+                return $this->buildDomainObject($row);
             } else {
                 throw new \Exception("No question matching id " . $id);
             }
@@ -131,12 +131,21 @@
         }
 
         /**
+         * Removes all questions for a game
+         *
+         * @param $game_id The id of the game
+         */
+        public function delete_all_by_game($game_id) {
+            $this->get_db()->delete('question', array('question_game_id' => $game_id));
+        }
+
+        /**
          * Creates an Question object based on a DB row.
          *
          * @param array $row The DB row containing Question data.
          * @return \Damarion\Domain\Question
          */
-        protected function build_domain_object(array $row) {
+        protected function buildDomainObject(array $row) {
 
             $question = new Question();
 
@@ -145,11 +154,11 @@
             $question->set_text($row['question_text']);
             $question->set_order($row['question_order']);
 
-            if (array_key_exists('art_id', $row)) {
+            if (array_key_exists('question_game_id', $row)) {
 
                 // Find and set the associated game
 
-                $game = $this->gameDAO->find($row['question_game_id']);
+                $game = $this->game_DAO->find($row['question_game_id']);
                 $question->set_game_id($row['question_game_id']);
                 $question->set_game($game);
 

@@ -32,7 +32,7 @@
 
             foreach ($result as $row) {
                 $answer_id = $row['answer_id'];
-                $answers[$answer_id] = $this->build_domain_object($row);
+                $answers[$answer_id] = $this->buildDomainObject($row);
             }
 
             return $answers;
@@ -52,7 +52,7 @@
             $row = $this->get_db()->fetchAssoc($sql, array($id));
 
             if ($row) {
-                return $this->build_domain_object($row);
+                return $this->buildDomainObject($row);
             } else {
                 throw new \Exception("No answer matching id " . $id);
             }
@@ -79,7 +79,7 @@
             $answers = array();
 
             foreach ($result as $row) {
-                $answers[] = $this->build_domain_object($row);
+                $answers[] = $this->buildDomainObject($row);
             }
 
             return $answers;
@@ -108,7 +108,7 @@
 
             foreach ($result as $row) {
 
-                $answer = $this->build_domain_object($row);
+                $answer = $this->buildDomainObject($row);
 
                 // The associated question is defined for the constructed answer
 
@@ -128,7 +128,7 @@
          * @param array $row The DB row containing Answer data.
          * @return \Damarion\Domain\Answer
          */
-        protected function build_domain_object(array $row) {
+        protected function buildDomainObject(array $row) {
 
             $answer = new Answer();
 

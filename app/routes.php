@@ -1,6 +1,10 @@
 <?php
 
     use Symfony\Component\HttpFoundation\Request;
+    use Damarion\Domain\Game;
+    use Damarion\Form\Type\GameType;
+    use Damarion\Domain\Question;
+    use Damarion\Form\Type\QuestionType;
     use Damarion\Domain\Vote;
     use Damarion\Form\Type\VoteType;
 
@@ -152,4 +156,59 @@
             'votes' => $votes,
             'users' => $users
         ));
+    });
+
+    // Add a new game
+
+    $app->match('/admin/game/add', function(Request $request) use ($app) {
+
+        $game = new Game();
+        $gameForm = $app['form.factory']->create(new GameType(), $game);
+        $gameForm->handleRequest($request);
+
+        if ($gameForm->isSubmitted() && $gameForm->isValid()) {
+            $app['dao.game']->save($game);
+            $app['session']->getFlashBag()->add('success', 'The game was successfully created.');
+        }
+
+        return $app['twig']->render('game_form.html.twig', array(
+            'title' => 'New game',
+            'gameForm' => $gameForm->createView()));
+
+    });
+
+    // Edit an existing game
+
+    $app->match('/admin/game/{id}/edit', function($id, Request $request) use ($app) {
+
+        $game = $app['dao.game']->find($id);
+        $gameForm = $app['form.factory']->create(new GameType(), $game);
+        $gameForm->handleRequest($request);
+
+        if ($gameForm->isSubmitted() && $gameForm->isValid()) {
+            $app['dao.game']->save($game);
+            $app['session']->getFlashBag()->add('success', 'The game was succesfully updated.');
+        }
+
+        return $app['twig']->render('game_form.html.twig', array(
+            'title' => 'Edit game',
+            'gameForm' => $gameForm->createView()));
+
+    });
+
+    // Remove a game
+
+    $app->get('/admin/game/{id}/delete', function($id, Request $request) use ($app) {
+
+        // Delete all associated comments
+
+        $app['dao.question']->delete_all_by_game($id);
+
+        // Delete the game
+
+        $app['dao.game']->delete($id);
+        $app['session']->getFlashBag()->add('success', 'The game was succesfully removed.');
+
+        return $app->redirect('/admin');
+
     });

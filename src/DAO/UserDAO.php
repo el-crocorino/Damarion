@@ -26,7 +26,7 @@
             $users = array();
 
             foreach ($result as $row) {
-                $users[] = $this->build_domain_object($row);
+                $users[] = $this->buildDomainObject($row);
             }
 
             return $users;
@@ -46,7 +46,7 @@
             $row = $this->get_db()->fetchAssoc($sql, array($id));
 
             if ($row) {
-                return $this->build_domain_object($row);
+                return $this->buildDomainObject($row);
             } else {
                 throw new \Exception("No user matching id " . $id);
             }
@@ -61,7 +61,7 @@
             $row = $this->get_db()->fetchAssoc($sql, array($username));
 
             if ($row) {
-                return $this->build_domain_object($row);
+                return $this->buildDomainObject($row);
             } else {
                 throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
             }
@@ -96,7 +96,7 @@
          * @param array $row The DB row containing User data.
          * @return \Damarion\Domain\User
          */
-        protected function build_domain_object(array $row) {
+        protected function buildDomainObject(array $row) {
 
             $user = new User();
 

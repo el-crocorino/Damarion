@@ -48,22 +48,24 @@
 
     // Register services.
 
-    $app['dao.question'] = $app->share(function ($app) {
-        return new Damarion\DAO\QuestionDAO($app['db']);
-    });
-
-    $app['dao.answer'] = $app->share(function ($app) {
-        $answerDAO = new Damarion\DAO\AnswerDAO($app['db']);
-        $answerDAO->set_question_DAO($app['dao.question']);
-        return $answerDAO;
+    $app['dao.user'] = $app->share(function ($app) {
+        return new Damarion\DAO\UserDAO($app['db']);
     });
 
     $app['dao.game'] = $app->share(function ($app) {
         return new Damarion\DAO\GameDAO($app['db']);
     });
 
-    $app['dao.user'] = $app->share(function ($app) {
-        return new Damarion\DAO\UserDAO($app['db']);
+    $app['dao.question'] = $app->share(function ($app) {
+        $questionDAO = new Damarion\DAO\QuestionDAO($app['db']);
+        $questionDAO->set_game_DAO($app['dao.game']);
+        return $questionDAO;
+    });
+
+    $app['dao.answer'] = $app->share(function ($app) {
+        $answerDAO = new Damarion\DAO\AnswerDAO($app['db']);
+        $answerDAO->set_question_DAO($app['dao.question']);
+        return $answerDAO;
     });
 
     $app['dao.vote'] = $app->share(function ($app) {

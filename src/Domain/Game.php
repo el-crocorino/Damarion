@@ -22,7 +22,7 @@
          * @param int $id
          */
         public function set_id($id) {
-            $this->$id = $id;
+            $this->id = $id;
         }
 
         /**
@@ -40,7 +40,7 @@
          * @param int $title
          */
         public function set_title($title) {
-            $this->$title = $title;
+            $this->title = $title;
         }
 
         /**
@@ -49,6 +49,42 @@
          * @return string
          */
         public function get_title() {
+            return $this->title;
+        }
+
+        /**
+         * Sets id
+         *
+         * @param int $id
+         */
+        public function setId($id) {
+            $this->id = $id;
+        }
+
+        /**
+         * Gets id
+         *
+         * @return int
+         */
+        public function getId() {
+            return $this->id;
+        }
+
+        /**
+         * Sets title
+         *
+         * @param int $title
+         */
+        public function setTitle($title) {
+            $this->title = $title;
+        }
+
+        /**
+         * Gets title
+         *
+         * @return string
+         */
+        public function getTitle() {
             return $this->title;
         }
 
