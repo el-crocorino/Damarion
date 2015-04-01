@@ -169,7 +169,7 @@
          * @param Damarion\Answer $answer
          * @return  boolean
          */
-        public function add_answer(Damarion\Answer $answer) {
+        public function add_answer(Answer $answer) {
 
             if (count($this->get_answers()) < 4) {
 
@@ -189,13 +189,13 @@
          * @param  Damarion\Answer $answer
          * @return boolean
          */
-        public function delete_answer(Damarion\Answer $answer) {
+        public function delete_answer(Answer $answer) {
 
-            $answers = $this->get_answers()
+            $answers = $this->get_answers();
 
             if (!empty($answers)) {
 
-                foreach ( AS $key => $value) {
+                foreach ($answers AS $key => $value) {
 
                     if ($value->get_id() == $answer->get_id()) {
 
@@ -230,6 +230,116 @@
          */
         public function get_game() {
             return $this->game;
+        }
+
+        // FORM GETTERS AND SETTERS
+
+        /**
+         * Sets Id
+         *
+         * @param int $id
+         */
+        public function setId($id) {
+            $this->id = $id;
+        }
+
+        /**
+         * Returns $id
+         *
+         * @return int
+         */
+        public function getId() {
+            return $this->id;
+        }
+
+        /**
+         * Sets Game id
+         *
+         * @param int $game_id
+         */
+        public function setGameId($game_id) {
+            $this->game_id = $game_id;
+        }
+
+        /**
+         * Gets Game id
+         *
+         * @return int
+         */
+        public function getGameId() {
+            return $this->game_id;
+        }
+
+        /**
+         * Sets active parameter
+         *
+         * @param boolean $active
+         */
+        public function setActive($active) {
+            $this->active = $active;
+        }
+
+        /**
+         * Gets active parameter
+         *
+         * @return bool
+         */
+        public function getActive() {
+            return $this->active;
+        }
+
+        /**
+         * Sets text
+         *
+         * @param string $text
+         */
+        public function setText($text) {
+            $this->text = $text;
+        }
+
+        /**
+         * Gets text
+         *
+         * @return string
+         */
+        public function getText() {
+            return $this->text;
+        }
+
+        /**
+         * Sets order
+         *
+         * @param int $order
+         */
+        public function setOrder($order) {
+            $this->order = $order;
+        }
+
+        /**
+         * Gets order
+         *
+         * @return int
+         */
+        public function getOrder() {
+            return $this->order;
+        }
+
+        /**
+         * Sets answers
+         *
+         * @param int $answers
+         */
+        public function setAnswers(ArrayCollection  $answers) {
+            $this->answers = $answers;
+        }
+
+        /**
+         * Gets answers
+         *
+         * @return int
+         */
+        public function getAnswers() {
+            return $this->answers;
         }
 
     }
