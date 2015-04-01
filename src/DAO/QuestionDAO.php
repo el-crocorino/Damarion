@@ -97,6 +97,26 @@
         }
 
         /**
+         * Returns a question matching the supplied order.
+         *
+         * @param integer $order
+         *
+         * @return \Damarion\Domain\Question|throws an exception if no matching question is found
+         */
+        public function find_by_order($order) {
+
+            $sql = 'SELECT * FROM question WHERE question_order=?';
+            $row = $this->get_db()->fetchAssoc($sql, array($order));
+
+            if ($row) {
+                return $this->buildDomainObject($row);
+            } else {
+                throw new \Exception("No question matching order " . $order);
+            }
+
+        }
+
+        /**
          * Return a list of all questions, sorted by date (most recent first).
          *
          * @return array A list of all questions.

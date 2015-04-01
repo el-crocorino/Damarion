@@ -3,10 +3,12 @@
     use Symfony\Component\HttpFoundation\Request;
     use Damarion\Domain\Game;
     use Damarion\Domain\Question;
+    use Damarion\Domain\Answer;
     use Damarion\Domain\Vote;
     use Damarion\Domain\User;
     use Damarion\Form\Type\GameType;
     use Damarion\Form\Type\QuestionType;
+    use Damarion\Form\Type\AnswerType;
     use Damarion\Form\Type\VoteType;
     use Damarion\Form\Type\UserType;
 
@@ -298,5 +300,30 @@
         $app['session']->getFlashBag()->add('success', 'The user was succesfully removed.');
 
         return $app->redirect('/admin');
+
+    });
+
+    // Edit question
+
+    $app->get('/admin/question/{id}/edit', function($id, Request $request) use ($app) {
+
+        $question = $app['dao.question']->find($id);
+        $answers = $app['dao.answer']->find_all_by_question($id);
+
+        foreach ($answers AS $value) {
+            $question->add_answer($value);
+        }
+
+        $questionForm = $app['form.factory']->create(new QuestionType, $question);
+        $questionForm->handleRequest($request);
+
+        if ($questionForm->isSubmitted() && $questionForm->isValid()) {
+
+        }
+
+        return $app['twig']->render('question_form.html.twig', array(
+            'title' => 'Edit question',
+            'questionForm' => $questionForm->createView()
+            ));
 
     });
