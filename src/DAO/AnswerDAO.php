@@ -184,6 +184,7 @@
                 // The answer has never been saved : insert it
 
                 $this->get_db()->insert('answer', $answer_data);
+
                 // Get the id of the newly created answer and set it on the entity.
 
                 $id = $this->get_db()->lastInsertId();

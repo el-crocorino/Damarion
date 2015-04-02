@@ -312,8 +312,12 @@
         $questionForm->handleRequest($request);
 
         if ($questionForm->isSubmitted() && $questionForm->isValid()) {
+
+            $question = $questionForm->getNormData();
+
             $app['dao.question']->save($question);
             $app['session']->getFlashBag()->add('success', 'The question was successfully created.');
+
         }
 
         return $app['twig']->render('question_form.html.twig', array(
@@ -359,16 +363,31 @@
 
     });
 
-
     // Add a new answer
 
     $app->match('/admin/answer/add', function(Request $request) use ($app) {
 
+        $questions = $app['dao.question']->find_all();
+
+        $questions_list = array();
+
+        foreach ($questions AS $value) {
+            $questions_list[$value->get_id()] = $value->get_text();
+        }
+
         $answer = new Answer();
-        $answerForm = $app['form.factory']->create(new AnswerType(), $answer);
+        $answerForm = $app['form.factory']->create(new AnswerType(), $questions_list);
         $answerForm->handleRequest($request);
 
         if ($answerForm->isSubmitted() && $answerForm->isValid()) {
+
+            $answer_data = $answerForm->getNormData();
+            $answer->set_question_id($answer_data['question_id']);
+            $answer->set_text($answer_data['text']);
+            $answer->set_right($answer_data['right']);
+            $answer->set_active($answer_data['active']);
+
+
             $app['dao.answer']->save($answer);
             $app['session']->getFlashBag()->add('success', 'The answer was successfully created.');
         }

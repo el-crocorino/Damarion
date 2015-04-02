@@ -9,9 +9,7 @@ class QuestionType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
 
-        $builder->add('game_id', 'hidden', array(
-                'data' => $options['data']->get_game_id()
-            ))
+        $builder->add('game_id', 'text')
             ->add('text', 'text')
             ->add('order', 'text')
             ->add('active', 'checkbox', array(

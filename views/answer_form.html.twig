@@ -17,18 +17,18 @@
 
         <div class="well">
 
-        {{ form_start(questionForm, { 'attr': {'class': 'form-horizontal'} }) }}
+        {{ form_start(answerForm, { 'attr': {'class': 'form-horizontal'} }) }}
 
             <div class="form-group">
 
-                {{ form_label(questionForm.game_id, null, { 'label_attr':  {
+                {{ form_label(answerForm.question_id, null, { 'label_attr':  {
                     'class': 'col-sm-5 control-label'
                 }}) }}
 
                 <div class="col-sm-4">
 
-                    {{ form_errors(questionForm.game_id) }}
-                    {{ form_widget(questionForm.game_id, { 'attr':  {
+                    {{ form_errors(answerForm.question_id) }}
+                    {{ form_widget(answerForm.question_id, { 'attr':  {
                         'class': 'form-control'
                     }}) }}
 
@@ -38,14 +38,14 @@
 
             <div class="form-group">
 
-                {{ form_label(questionForm.text, null, { 'label_attr':  {
+                {{ form_label(answerForm.text, null, { 'label_attr':  {
                     'class': 'col-sm-5 control-label'
                 }}) }}
 
                 <div class="col-sm-4">
 
-                    {{ form_errors(questionForm.text) }}
-                    {{ form_widget(questionForm.text, { 'attr':  {
+                    {{ form_errors(answerForm.text) }}
+                    {{ form_widget(answerForm.text, { 'attr':  {
                         'class': 'form-control'
                     }}) }}
 
@@ -55,14 +55,14 @@
 
             <div class="form-group">
 
-                {{ form_label(questionForm.order, null, { 'label_attr':  {
+                {{ form_label(answerForm.right, null, { 'label_attr':  {
                     'class': 'col-sm-5 control-label'
                 }}) }}
 
                 <div class="col-sm-4">
 
-                    {{ form_errors(questionForm.order) }}
-                    {{ form_widget(questionForm.order, { 'attr':  {
+                    {{ form_errors(answerForm.right) }}
+                    {{ form_widget(answerForm.right, { 'attr':  {
                         'class': 'form-control'
                     }}) }}
 
@@ -72,14 +72,14 @@
 
             <div class="form-group">
 
-                {{ form_label(questionForm.active, null, { 'label_attr':  {
+                {{ form_label(answerForm.active, null, { 'label_attr':  {
                     'class': 'col-sm-5 control-label'
                 }}) }}
 
                 <div class="col-sm-2">
 
-                    {{ form_errors(questionForm.active) }}
-                    {{ form_widget(questionForm.active, { 'attr':  {
+                    {{ form_errors(answerForm.active) }}
+                    {{ form_widget(answerForm.active, { 'attr':  {
                         'class': 'form-control'
                     }}) }}
 
@@ -95,7 +95,7 @@
 
             </div>
 
-        {{ form_end(questionForm) }}
+        {{ form_end(answerForm) }}
 
     </div>
 

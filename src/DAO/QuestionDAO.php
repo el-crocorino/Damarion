@@ -202,6 +202,7 @@
         public function save(Question $question) {
 
             $question_data = array(
+                'question_game_id' => $question->get_game_id(),
                 'question_text' => $question->get_text(),
                 'question_order' => $question->get_order(),
                 'question_active' => $question->get_active()
