@@ -22,6 +22,7 @@
 
                     <li class="active"><a href="#games" data-toggle="tab">Games</a></li>
                     <li><a href="#questions" data-toggle="tab">Questions</a></li>
+                    <li><a href="#answers" data-toggle="tab">Answers</a></li>
                     <li><a href="#votes" data-toggle="tab">Votes</a></li>
                     <li><a href="#users" data-toggle="tab">Users</a></li>
 
@@ -205,6 +206,116 @@
                     <div class="alert alert-warning">No questions found.</div>
 
                 {% endif %}
+
+                <a href="/admin/question/add">
+
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span> Add question
+                    </button>
+
+                </a>
+
+            </div>
+
+            <div class="tab-pane fade adminTable" id="answers">
+
+                {% if answers %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-condensed">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Question</th>
+                                    <th>Texte</th>
+                                    <th>Juste</th>
+                                    <th>Active</th>
+                                    <th></th>  <!-- Actions column -->
+
+                                </tr>
+
+                            </thead>
+
+                            {% for answer in answers %}
+
+                                <tr>
+
+                                    <td><a class="gameTitle" href="/question/{{ answer.get_question.get_id }}">{{ answer.get_question.get_text }}</a></td>
+                                    <td>{{ answer.get_text | truncate(60) }}</td>
+                                    <td>
+                                        {% if answer.get_right == true %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}</td>
+                                    <td>
+                                    <td>
+                                        {% if answer.get_active == true %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}</td>
+                                    <td>
+
+                                        <a href="/admin/answer/{{ answer.get_id }}/edit" class="btn btn-info btn-xs" title="Edit">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-xs" title="Delete" data-toggle="modal" data-target="#answerDialog{{ answer.get_id }}">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+
+                                        <div class="modal fade" id="answerDialog{{ answer.get_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                                            <div class="modal-dialog">
+
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                        <h4 class="modal-title" id="myModalLabel">Confirmation needed</h4>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        Do you really want to delete this answer ?
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        <a href="/admin/answer/{{ answer.get_id }}/delete" class="btn btn-danger">Confirm</a>
+                                                    </div>
+
+                                                </div><!-- /.modal-content -->
+
+                                            </div><!-- /.modal-dialog -->
+
+                                        </div><!-- /.modal -->
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-warning">No answers found.</div>
+
+                {% endif %}
+
+                <a href="/admin/answer/add">
+
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span> Add answer
+                    </button>
+
+                </a>
 
             </div>
 

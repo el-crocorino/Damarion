@@ -159,4 +159,59 @@
 
         }
 
+        /**
+         * Saves an answer into the database.
+         *
+         * @param \Damarion\Domain\Answer $answer The answer to save
+         */
+        public function save(Answer $answer) {
+
+            $answer_data = array(
+                'answer_question_id' => $answer->get_question_id(),
+                'answer_text' => $answer->get_text(),
+                'answer_right' => $answer->get_right(),
+                'answer_active' => $answer->get_active()
+                );
+
+            if ($answer->get_id()) {
+
+                // The answer has already been saved : update it
+
+                $this->get_db()->update('answer', $answer_data, array('answer_id' => $answer->get_id()));
+
+            } else {
+
+                // The answer has never been saved : insert it
+
+                $this->get_db()->insert('answer', $answer_data);
+                // Get the id of the newly created answer and set it on the entity.
+
+                $id = $this->get_db()->lastInsertId();
+                $answer->set_id($id);
+            }
+
+        }
+
+        /**
+         * Removes a answer from the database.
+         *
+         * @param integer $id The answer id.
+         */
+        public function delete($id) {
+
+            // Delete the answer
+
+            $this->get_db()->delete('answer', array('answer_id' => $id));
+
+        }
+
+        /**
+         * Removes all answers for a question
+         *
+         * @param integer $questionId The id of the question
+         */
+        public function delete_all_by_question($questionId) {
+            $this->get_db()->delete('answer', array('answer_question_id' => $questionId));
+        }
+
     }

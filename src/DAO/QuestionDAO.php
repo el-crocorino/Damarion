@@ -194,4 +194,49 @@
 
         }
 
+        /**
+         * Saves a question into the database.
+         *
+         * @param \Damarion\Domain\Question $question The question to save
+         */
+        public function save(Question $question) {
+
+            $question_data = array(
+                'question_text' => $question->get_text(),
+                'question_order' => $question->get_order(),
+                'question_active' => $question->get_active()
+                );
+
+            if ($question->get_id()) {
+
+                // The question has already been saved : update it
+
+                $this->get_db()->update('question', $question_data, array('question_id' => $question->get_id()));
+
+            } else {
+
+                // The question has never been saved : insert it
+
+                $this->get_db()->insert('question', $question_data);
+                // Get the id of the newly created question and set it on the entity.
+
+                $id = $this->get_db()->lastInsertId();
+                $question->set_id($id);
+            }
+
+        }
+
+        /**
+         * Removes a question from the database.
+         *
+         * @param integer $id The question id.
+         */
+        public function delete($id) {
+
+            // Delete the question
+
+            $this->get_db()->delete('question', array('question_id' => $id));
+
+        }
+
     }

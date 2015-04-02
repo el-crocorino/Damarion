@@ -303,38 +303,114 @@
 
     });
 
-    // Edit question
+    // Add a new question
 
-    $app->get('/admin/question/{id}/edit', function($id, Request $request) use ($app) {
+    $app->match('/admin/question/add', function(Request $request) use ($app) {
 
-        $question = $app['dao.question']->find($id);
-        $answers = $app['dao.answer']->find_all_by_question($id);
-
-        $questionForm = $app['form.factory']->create(new QuestionType, $question);
+        $question = new Question();
+        $questionForm = $app['form.factory']->create(new QuestionType(), $question);
         $questionForm->handleRequest($request);
 
         if ($questionForm->isSubmitted() && $questionForm->isValid()) {
-
+            $app['dao.question']->save($question);
+            $app['session']->getFlashBag()->add('success', 'The question was successfully created.');
         }
 
-        $answerForms = array();
+        return $app['twig']->render('question_form.html.twig', array(
+            'title' => 'New question',
+            'questionForm' => $questionForm->createView()));
 
-        foreach ($answers AS $value) {
+    });
 
-            $question->add_answer($value);
-            $answerForm = $app['form.factory']->create(new AnswerType, $value);
-            $answerForms[] = $answerForm->createView();
+    // Edit an existing question
 
-            if ($questionForm->isSubmitted() && $questionForm->isValid()) {
+    $app->match('/admin/question/{id}/edit', function($id, Request $request) use ($app) {
 
-            }
+        $question = $app['dao.question']->find($id);
+        $questionForm = $app['form.factory']->create(new QuestionType(), $question);
+        $questionForm->handleRequest($request);
 
+        if ($questionForm->isSubmitted() && $questionForm->isValid()) {
+            $app['dao.question']->save($question);
+            $app['session']->getFlashBag()->add('success', 'The question was succesfully updated.');
         }
 
         return $app['twig']->render('question_form.html.twig', array(
             'title' => 'Edit question',
-            'questionForm' => $questionForm->createView(),
-            'answerForms' => $answerForms
-            ));
+            'questionForm' => $questionForm->createView()));
+
+    });
+
+    // Remove a question
+
+    $app->get('/admin/question/{id}/delete', function($id, Request $request) use ($app) {
+
+        // Delete all associated answers and votes
+
+        $app['dao.answer']->delete_all_by_question($id);
+        $app['dao.vote']->delete_all_by_question($id);
+
+        // Delete the question
+
+        $app['dao.question']->delete($id);
+        $app['session']->getFlashBag()->add('success', 'The question was succesfully removed.');
+
+        return $app->redirect('/admin');
+
+    });
+
+
+    // Add a new answer
+
+    $app->match('/admin/answer/add', function(Request $request) use ($app) {
+
+        $answer = new Answer();
+        $answerForm = $app['form.factory']->create(new AnswerType(), $answer);
+        $answerForm->handleRequest($request);
+
+        if ($answerForm->isSubmitted() && $answerForm->isValid()) {
+            $app['dao.answer']->save($answer);
+            $app['session']->getFlashBag()->add('success', 'The answer was successfully created.');
+        }
+
+        return $app['twig']->render('answer_form.html.twig', array(
+            'title' => 'New answer',
+            'answerForm' => $answerForm->createView()));
+
+    });
+
+    // Edit an existing answer
+
+    $app->match('/admin/answer/{id}/edit', function($id, Request $request) use ($app) {
+
+        $answer = $app['dao.answer']->find($id);
+        $answerForm = $app['form.factory']->create(new AnswerType(), $answer);
+        $answerForm->handleRequest($request);
+
+        if ($answerForm->isSubmitted() && $answerForm->isValid()) {
+            $app['dao.answer']->save($answer);
+            $app['session']->getFlashBag()->add('success', 'The answer was succesfully updated.');
+        }
+
+        return $app['twig']->render('answer_form.html.twig', array(
+            'title' => 'Edit answer',
+            'answerForm' => $answerForm->createView()));
+
+    });
+
+    // Remove an answer
+
+    $app->get('/admin/answer/{id}/delete', function($id, Request $request) use ($app) {
+
+        // Delete all associated answers
+
+        $app['dao.vote']->delete_all_by_answer($id);
+
+        // Delete the answer
+
+        $app['dao.answer']->delete($id);
+        $app['session']->getFlashBag()->add('success', 'The answer was succesfully removed.');
+
+        return $app->redirect('/admin');
 
     });

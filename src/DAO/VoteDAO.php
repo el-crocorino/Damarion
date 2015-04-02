@@ -237,4 +237,22 @@
             $this->get_db()->delete('vote', array('vote_user_id' => $userId));
         }
 
+        /**
+         * Removes all votes for a question
+         *
+         * @param integer $questionId The id of the question
+         */
+        public function delete_all_by_question($questionId) {
+            $this->get_db()->delete('vote', array('vote_question_id' => $questionId));
+        }
+
+        /**
+         * Removes all votes for an answer
+         *
+         * @param integer $answerId The id of the answer
+         */
+        public function delete_all_by_answer($answerId) {
+            $this->get_db()->delete('vote', array('vote_answer_id' => $answerId));
+        }
+
     }
