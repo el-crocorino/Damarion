@@ -124,7 +124,7 @@
         public function find_current() {
 
             $sql = 'SELECT * FROM question WHERE question_active = 1';
-            $result = $this->get_db()->fetchAssoc($sql);
+            $row = $this->get_db()->fetchAssoc($sql);
 
             if ($row) {
                 return $this->buildDomainObject($row);

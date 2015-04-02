@@ -132,6 +132,72 @@
 
     });
 
+    // Question details with votes
+
+    $app->match('/public', function (Request $request) use ($app) {
+
+        $question = $app['dao.question']->find_current();
+        $question_id = $question->get_id();
+        $answers = $app['dao.answer']->find_all_by_question($question_id);
+        $votes = $app['dao.vote']->find_all_by_question($question_id);
+
+        foreach ($answers AS $answer) {
+            $form_option_answers[$answer->get_id()] = $answer->get_text();
+        }
+
+        $user = $app['security']->getToken()->getUser();
+
+        $voteFormView = null;
+        $has_voted = false;
+
+        if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
+
+            // A user is fully authenticated : he can add and see votes
+
+            $vote = new Vote();
+
+            $vote->set_question($question);
+            $vote->set_question_id($question_id);
+
+            $vote->set_user($user);
+            $vote->set_user_id($user->get_id());
+
+            $voteForm = $app['form.factory']->create(new VoteType(), $form_option_answers);
+            $voteForm->handleRequest($request);
+
+            if ($voteForm->isSubmitted() && $voteForm->isValid()) {
+
+                $vote->set_answer_id($voteForm->getViewData()['answer_id']);
+
+                if ($app['dao.vote']->save($vote)) {
+                    $app['session']->getFlashBag()->add('success', 'Votre vote a bien été enregistré');
+                } else {
+                    $app['session']->getFlashBag()->add('error', 'Un seul vote par question !');
+                }
+
+
+            }
+
+            $voteFormView = $voteForm->createView();
+
+            $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
+
+        }
+
+        $votes = $app['dao.vote']->find_all_by_question($question_id);
+
+        $user_count = count($app['dao.user']->find_all());
+
+        return $app['twig']->render('public.html.twig', array(
+            'question' => $question,
+            'answers' => $answers,
+            'votes' => $votes,
+            'voteForm' => $voteFormView,
+            'has_voted' => $has_voted
+            ));
+
+    });
+
     // Login Page
 
     $app->get('/login', function(Request $request) use ($app) {

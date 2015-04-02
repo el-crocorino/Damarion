@@ -1,0 +1,46 @@
+{% extends "layout.html.twig" %}
+{% form_theme voteForm 'Ressources:views:Form:fields.html.twig' %}
+
+{% block title %}Question {{ question.get_id }}{% endblock %}
+
+{% block content %}
+
+    <article>
+
+        <h2>Question {{ question.get_order }} : {{ question.get_text }}</h2>
+
+        <h3>Vote</h3>
+
+        {% if voteForm %}
+
+            {% if has_voted %}
+                Vous avez déjà voté.
+            {% else %}
+            {{ form_start(voteForm) }}
+                <div class="form-group">
+                    {{ form_errors(voteForm.answer_id) }}
+                    {{ form_widget(voteForm.answer_id) }}
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Vote" />
+                </div>
+            {{ form_end(voteForm) }}
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-error">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% endif %}
+
+        {% else %}
+            <a href="{{ path('login') }} ">Connectez-vous</a> pour pouvoir voter.
+        {% endif %}
+
+    </article>
+
+{% endblock %}
