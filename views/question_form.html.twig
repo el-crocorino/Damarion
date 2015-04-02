@@ -1,0 +1,102 @@
+{% extends 'layout.html.twig' %}
+{% set adminMenu = true %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <h2 class="text-center">{{ block('title') }}</h2>
+
+        {% for flashMessage in app.session.flashbag.get('success') %}
+
+            <div class="alert alert-success">
+                {{ flashMessage }}
+            </div>
+
+        {% endfor %}
+
+        <div class="well">
+
+        {{ form_start(questionForm, { 'attr': {'class': 'form-horizontal'} }) }}
+
+            <div class="form-group">
+
+                {{ form_label(questionForm.game_id, null, { 'label_attr':  {
+                    'class': 'col-sm-5 control-label'
+                }}) }}
+
+                <div class="col-sm-4">
+
+                    {{ form_errors(questionForm.game_id) }}
+                    {{ form_widget(questionForm.game_id, { 'attr':  {
+                        'class': 'form-control'
+                    }}) }}
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                {{ form_label(questionForm.text, null, { 'label_attr':  {
+                    'class': 'col-sm-5 control-label'
+                }}) }}
+
+                <div class="col-sm-4">
+
+                    {{ form_errors(questionForm.text) }}
+                    {{ form_widget(questionForm.text, { 'attr':  {
+                        'class': 'form-control'
+                    }}) }}
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                {{ form_label(questionForm.order, null, { 'label_attr':  {
+                    'class': 'col-sm-5 control-label'
+                }}) }}
+
+                <div class="col-sm-4">
+
+                    {{ form_errors(questionForm.order) }}
+                    {{ form_widget(questionForm.order, { 'attr':  {
+                        'class': 'form-control'
+                    }}) }}
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                {{ form_label(questionForm.active, null, { 'label_attr':  {
+                    'class': 'col-sm-5 control-label'
+                }}) }}
+
+                <div class="col-sm-2">
+
+                    {{ form_errors(questionForm.active) }}
+                    {{ form_widget(questionForm.active, { 'attr':  {
+                        'class': 'form-control'
+                    }}) }}
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-sm-offset-5 col-sm-3">
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+
+            </div>
+
+        {{ form_end(questionForm) }}
+
+    </div>
+
+{% endblock %}

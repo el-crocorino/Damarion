@@ -35,6 +35,6 @@
          * Builds a domain object from a DB row.
          * Must be overridden by child classes.
          */
-        protected abstract function build_domain_object(array $row);
+        protected abstract function buildDomainObject(array $row);
 
     }

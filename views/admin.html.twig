@@ -1,0 +1,459 @@
+{% extends "layout.html.twig" %}
+{% set adminMenu = true %}
+
+{% block title %}Administration{% endblock %}
+
+    {% block content %}
+        <h2 class="text-center">{{ block('title') }}</h2>
+
+        {% for flashMessage in app.session.flashbag.get('success') %}
+
+            <div class="alert alert-success">
+                {{ flashMessage }}
+            </div>
+
+        {% endfor %}
+
+        <div class="row">
+
+            <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+
+                <ul class="nav nav-tabs nav-justified">
+
+                    <li class="active"><a href="#games" data-toggle="tab">Games</a></li>
+                    <li><a href="#questions" data-toggle="tab">Questions</a></li>
+                    <li><a href="#answers" data-toggle="tab">Answers</a></li>
+                    <li><a href="#votes" data-toggle="tab">Votes</a></li>
+                    <li><a href="#users" data-toggle="tab">Users</a></li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <div class="tab-content">
+
+            <div class="tab-pane fade in active adminTable" id="games">
+
+                {% if games %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-condensed">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Id</th>
+                                    <th>Title</th>
+                                    <th></th>  <!-- Actions column -->
+                                </tr>
+
+                            </thead>
+
+                            {% for game in games %}
+
+                            <tr>
+
+                                <td>{{ game.get_id }}</td>
+                                <td><a class="gameTitle" href="/game/{{ game.get_id }}">{{ game.get_title | truncate(60) }}</a></td>
+
+                                <td>
+
+                                    <a href="/admin/game/{{ game.get_id }}/edit" class="btn btn-info btn-xs" title="Edit">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                    <button type="button" class="btn btn-danger btn-xs" title="Delete" data-toggle="modal" data-target="#gameDialog{{ game.get_id }}">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+
+                                    <div class="modal fade" id="gameDialog{{ game.get_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                                        <div class="modal-dialog">
+
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title" id="myModalLabel">Confirmation needed</h4>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    Do you really want to delete this game ?
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                    <a href="/admin/game/{{ game.get_id }}/delete" class="btn btn-danger">Confirm</a>
+                                                </div>
+
+                                            </div><!-- /.modal-content -->
+
+                                        </div><!-- /.modal-dialog -->
+
+                                    </div><!-- /.modal -->
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="alert alert-warning">No games found.</div>
+
+                {% endif %}
+
+                <a href="/admin/game/add">
+
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span> Add game
+                    </button>
+
+                </a>
+
+            </div>
+
+            <div class="tab-pane fade adminTable" id="questions">
+
+                {% if questions %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-condensed">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Game</th>
+                                    <th>Ordre</th>
+                                    <th>Texte</th>
+                                    <th>Active</th>
+                                    <th></th>  <!-- Actions column -->
+
+                                </tr>
+
+                            </thead>
+
+                            {% for question in questions %}
+
+                                <tr>
+
+                                    <td><a class="gameTitle" href="/game/{{ question.get_game.get_id }}">{{ question.get_game.get_title }}</a></td>
+                                    <td>{{ question.get_order }}</td>
+                                    <td>{{ question.get_text | truncate(60) }}</td>
+                                    <td>
+                                        {% if question.get_active == 'ROLE_ADMIN' %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}</td>
+                                    <td>
+
+                                        <a href="/admin/question/{{ question.get_id }}/edit" class="btn btn-info btn-xs" title="Edit">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-xs" title="Delete" data-toggle="modal" data-target="#questionDialog{{ question.get_id }}">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+
+                                        <div class="modal fade" id="questionDialog{{ question.get_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                                            <div class="modal-dialog">
+
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                        <h4 class="modal-title" id="myModalLabel">Confirmation needed</h4>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        Do you really want to delete this question ?
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        <a href="/admin/question/{{ question.get_id }}/delete" class="btn btn-danger">Confirm</a>
+                                                    </div>
+
+                                                </div><!-- /.modal-content -->
+
+                                            </div><!-- /.modal-dialog -->
+
+                                        </div><!-- /.modal -->
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-warning">No questions found.</div>
+
+                {% endif %}
+
+                <a href="/admin/question/add">
+
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span> Add question
+                    </button>
+
+                </a>
+
+            </div>
+
+            <div class="tab-pane fade adminTable" id="answers">
+
+                {% if answers %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-condensed">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Question</th>
+                                    <th>Texte</th>
+                                    <th>Juste</th>
+                                    <th>Active</th>
+                                    <th></th>  <!-- Actions column -->
+
+                                </tr>
+
+                            </thead>
+
+                            {% for answer in answers %}
+
+                                <tr>
+
+                                    <td><a class="gameTitle" href="/question/{{ answer.get_question.get_id }}">{{ answer.get_question.get_text }}</a></td>
+                                    <td>{{ answer.get_text | truncate(60) }}</td>
+                                    <td>
+                                        {% if answer.get_right == true %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}</td>
+                                    <td>
+                                    <td>
+                                        {% if answer.get_active == true %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}</td>
+                                    <td>
+
+                                        <a href="/admin/answer/{{ answer.get_id }}/edit" class="btn btn-info btn-xs" title="Edit">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+                                        <button type="button" class="btn btn-danger btn-xs" title="Delete" data-toggle="modal" data-target="#answerDialog{{ answer.get_id }}">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+
+                                        <div class="modal fade" id="answerDialog{{ answer.get_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                                            <div class="modal-dialog">
+
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                        <h4 class="modal-title" id="myModalLabel">Confirmation needed</h4>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        Do you really want to delete this answer ?
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        <a href="/admin/answer/{{ answer.get_id }}/delete" class="btn btn-danger">Confirm</a>
+                                                    </div>
+
+                                                </div><!-- /.modal-content -->
+
+                                            </div><!-- /.modal-dialog -->
+
+                                        </div><!-- /.modal -->
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-warning">No answers found.</div>
+
+                {% endif %}
+
+                <a href="/admin/answer/add">
+
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus"></span> Add answer
+                    </button>
+
+                </a>
+
+            </div>
+
+            <div class="tab-pane fade adminTable" id="votes">
+
+                {% if votes %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-condensed">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Game</th>
+                                    <th>User</th>
+                                    <th>Question</th>
+                                    <th>Answer</th>
+
+                                </tr>
+
+                            </thead>
+
+                            {% for vote in votes %}
+
+                                <tr>
+
+                                    <td><a class="gameTitle" href="/game/{{ vote.get_question.get_game.get_id }}">{{ vote.get_question.get_game.get_title }}</a></td>
+                                    <td><a class="userTitle" href="/user/{{ vote.get_user.get_id }}">{{ vote.get_user.get_username }}</a></td>
+                                    <td><a class="questionTitle" href="/question/{{ vote.get_question.get_id }}">{{ vote.get_question.get_text }}</a></td>
+                                    <td><a class="answerTitle" href="/answer/{{ vote.get_answer.get_id }}">{{ vote.get_answer.get_text }}</a></td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-warning">No votes found.</div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="tab-pane fade adminTable" id="users">
+
+                {% if users %}
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-condensed">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th></th>  <!-- Actions column -->
+
+                                </tr>
+
+                            </thead>
+
+                            {% for user in users %}
+
+                                <tr>
+                                    <td>{{ user.get_username }}</a></td>
+
+                                    <td>
+                                        {% if user.get_role == 'ROLE_ADMIN' %}
+                                            Admin
+                                        {% else %}
+                                            User
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+
+                                        <a href="/admin/user/{{ user.get_id }}/edit" class="btn btn-info btn-xs" title="Edit">
+                                            <span class="glyphicon glyphicon-edit"></span>
+                                        </a>
+
+                                        <button type="button" class="btn btn-danger btn-xs" title="Delete" data-toggle="modal" data-target="#userDialog{{ user.get_id }}">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+
+                                        <div class="modal fade" id="userDialog{{ user.get_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+                                            <div class="modal-dialog">
+
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                        <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        Voulez-vous vraiment supprimer cet utilisateur ?
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                                        <a href="/admin/user/{{ user.get_id }}/delete" class="btn btn-danger">Supprimer</a>
+                                                    </div>
+
+                                                </div><!-- /.modal-content -->
+
+                                            </div><!-- /.modal-dialog -->
+
+                                        </div><!-- /.modal -->
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-warning">No users found.</div>
+
+                {% endif %}
+
+                <a href="/admin/user/add"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add user</button></a>
+
+            </div>
+
+        </div>
+
+    {% endblock %}

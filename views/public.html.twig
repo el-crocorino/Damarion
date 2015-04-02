@@ -1,4 +1,5 @@
 {% extends "layout.html.twig" %}
+{% form_theme voteForm 'Ressources:views:Form:fields.html.twig' %}
 
 {% block title %}Question {{ question.get_id }}{% endblock %}
 
@@ -6,7 +7,7 @@
 
     <article>
 
-        <h2>Question {{ question.get_id }} : {{ question.get_text }}</h2>
+        <h2>Question {{ question.get_order }} : {{ question.get_text }}</h2>
 
         <h3>Vote</h3>
 
@@ -19,7 +20,6 @@
                 <div class="form-group">
                     {{ form_errors(voteForm.answer_id) }}
                     {{ form_widget(voteForm.answer_id) }}
-                    {{ dump(form_widget(voteForm.answer_id)) }}
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary" value="Vote" />
@@ -42,33 +42,5 @@
         {% endif %}
 
     </article>
-
-    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-<script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
-
-{% verbatim %}
-
-    <script type="text/javascript">
-
-        $(function() {
-
-            $('#container').highcharts({
-
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: ''
-                },
-                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
-
-            });
-
-        });
-
-    </script>
-
-{% endverbatim %}
 
 {% endblock %}

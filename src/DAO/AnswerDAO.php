@@ -32,7 +32,7 @@
 
             foreach ($result as $row) {
                 $answer_id = $row['answer_id'];
-                $answers[$answer_id] = $this->build_domain_object($row);
+                $answers[$answer_id] = $this->buildDomainObject($row);
             }
 
             return $answers;
@@ -52,7 +52,7 @@
             $row = $this->get_db()->fetchAssoc($sql, array($id));
 
             if ($row) {
-                return $this->build_domain_object($row);
+                return $this->buildDomainObject($row);
             } else {
                 throw new \Exception("No answer matching id " . $id);
             }
@@ -79,7 +79,7 @@
             $answers = array();
 
             foreach ($result as $row) {
-                $answers[] = $this->build_domain_object($row);
+                $answers[] = $this->buildDomainObject($row);
             }
 
             return $answers;
@@ -108,7 +108,7 @@
 
             foreach ($result as $row) {
 
-                $answer = $this->build_domain_object($row);
+                $answer = $this->buildDomainObject($row);
 
                 // The associated question is defined for the constructed answer
 
@@ -128,14 +128,23 @@
          * @param array $row The DB row containing Answer data.
          * @return \Damarion\Domain\Answer
          */
-        protected function build_domain_object(array $row) {
+        protected function buildDomainObject(array $row) {
 
             $answer = new Answer();
 
             $answer->set_id($row['answer_id']);
             $answer->set_text($row['answer_text']);
-            $answer->set_right($row['answer_right']);
-            $answer->set_active($row['answer_active']);
+
+            $answer->set_active(false);
+            $answer->set_right(false);
+
+            if ($row['answer_active'] > 0) {
+                $answer->set_active(true);
+            }
+
+            if ($row['answer_right'] > 0) {
+                $answer->set_right(true);
+            }
 
             if (array_key_exists('answer_question_id', $row)) {
 
@@ -148,6 +157,62 @@
 
             return $answer;
 
+        }
+
+        /**
+         * Saves an answer into the database.
+         *
+         * @param \Damarion\Domain\Answer $answer The answer to save
+         */
+        public function save(Answer $answer) {
+
+            $answer_data = array(
+                'answer_question_id' => $answer->get_question_id(),
+                'answer_text' => $answer->get_text(),
+                'answer_right' => $answer->get_right(),
+                'answer_active' => $answer->get_active()
+                );
+
+            if ($answer->get_id()) {
+
+                // The answer has already been saved : update it
+
+                $this->get_db()->update('answer', $answer_data, array('answer_id' => $answer->get_id()));
+
+            } else {
+
+                // The answer has never been saved : insert it
+
+                $this->get_db()->insert('answer', $answer_data);
+
+                // Get the id of the newly created answer and set it on the entity.
+
+                $id = $this->get_db()->lastInsertId();
+                $answer->set_id($id);
+            }
+
+        }
+
+        /**
+         * Removes a answer from the database.
+         *
+         * @param integer $id The answer id.
+         */
+        public function delete($id) {
+
+            // Delete the answer
+
+            $this->get_db()->delete('answer', array('answer_id' => $id));
+
+        }
+
+        /**
+         * Removes all answers for a question
+         *
+         * @param integer $questionId The id of the question
+         */
+        public function delete_all_by_question($questionId) {
+            $this->get_db()->delete('answer', array('answer_question_id' => $questionId));
         }
 
     }

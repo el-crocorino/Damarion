@@ -56,7 +56,7 @@
          */
         public function find_all() {
 
-            $sql = 'SELECT * FROM vote ORDER BY vote_id ASC';
+            $sql = 'SELECT * FROM vote ORDER BY vote_question_id, vote_user_id ASC';
             $result = $this->get_db()->fetchAll($sql);
 
             // Convert query result to an array of domain objects
@@ -65,7 +65,7 @@
 
             foreach ($result as $row) {
                 $vote_id = $row['vote_id'];
-                $votes[$vote_id] = $this->build_domain_object($row);
+                $votes[$vote_id] = $this->buildDomainObject($row);
             }
 
             return $votes;
@@ -94,7 +94,7 @@
 
             foreach ($result as $row) {
 
-                $vote = $this->build_domain_object($row);
+                $vote = $this->buildDomainObject($row);
 
                 // The associated question is defined for the constructed vote
 
@@ -131,7 +131,7 @@
 
             foreach ($result as $row) {
 
-                $vote = $this->build_domain_object($row);
+                $vote = $this->buildDomainObject($row);
 
                 // The associated question is defined for the constructed vote
 
@@ -151,7 +151,7 @@
          * @param array $row The DB row containing Vote data.
          * @return \Damarion\Domain\Vote
          */
-        protected function build_domain_object(array $row) {
+        protected function buildDomainObject(array $row) {
 
             $vote = new Vote();
 
@@ -226,6 +226,33 @@
 
             }
 
+        }
+
+        /**
+         * Removes all votes for a user
+         *
+         * @param integer $userId The id of the user
+         */
+        public function delete_all_by_user($userId) {
+            $this->get_db()->delete('vote', array('vote_user_id' => $userId));
+        }
+
+        /**
+         * Removes all votes for a question
+         *
+         * @param integer $questionId The id of the question
+         */
+        public function delete_all_by_question($questionId) {
+            $this->get_db()->delete('vote', array('vote_question_id' => $questionId));
+        }
+
+        /**
+         * Removes all votes for an answer
+         *
+         * @param integer $answerId The id of the answer
+         */
+        public function delete_all_by_answer($answerId) {
+            $this->get_db()->delete('vote', array('vote_answer_id' => $answerId));
         }
 
     }

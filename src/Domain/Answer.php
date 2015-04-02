@@ -137,6 +137,78 @@
         }
 
         /**
+         * Sets question id
+         *
+         * @param int $question_id
+         */
+        public function setQuestionId($question_id) {
+            $this->question_id = $question_id;
+        }
+
+        /**
+         * Gets question id
+         *
+         * @return int
+         */
+        public function getQuestionId() {
+            return $this->question_id;
+        }
+
+        /**
+         * Sets text
+         *
+         * @param string $text
+         */
+        public function setText($text) {
+            $this->text = $text;
+        }
+
+        /**
+         * Gets text
+         *
+         * @return string
+         */
+        public function getText() {
+            return $this->text;
+        }
+
+        /**
+         * Sets right
+         *
+         * @param bool $right
+         */
+        public function setRight($right) {
+            $this->right = $right;
+        }
+
+        /**
+         * Gets right
+         *
+         * @return bool
+         */
+        public function getRight() {
+            return $this->right;
+        }
+
+        /**
+         * Sets active
+         *
+         * @param bool $active
+         */
+        public function setActive($active) {
+            $this->active = $active;
+        }
+
+        /**
+         * Gets active
+         *
+         * @return bool
+         */
+        public function getActive() {
+            return $this->active;
+        }
+
+        /**
          * Sets question
          *
          * @param int $question
