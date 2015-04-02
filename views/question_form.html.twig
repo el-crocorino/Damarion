@@ -15,14 +15,6 @@
 
         {% endfor %}
 
-        {% if form_errors(questionForm.password.first) %}
-
-            <div class="alert alert-danger">
-                {{ form_errors(questionForm.password.first) }}
-            </div>
-
-        {% endif %}
-
         <div class="well">
 
         {{ form_start(questionForm, { 'attr': {'class': 'form-horizontal'} }) }}
@@ -90,7 +82,7 @@
 
             <ul>
 
-            {% for answer in questionForm.answers %}
+            {% for answerForm in answerForms %}
 
                 <div class="form-group">
 

@@ -14,13 +14,17 @@ class AnswerType extends AbstractType {
             ))
             ->add('text', 'text')
             ->add('right', 'checkbox', array(
-                'label' => 'Bonne répoonse ? ',
+                'label' => 'Bonne réponse ? ',
                 'required' => false
             ))
             ->add('active', 'checkbox', array(
                 'label' => 'Active ?',
                 'required' => false
             ));
+    }
+
+    public function getDefaultOptions(array $options) {
+        return array('data_class' => 'Damarion\Domain\Answer');
     }
 
     public function getName() {

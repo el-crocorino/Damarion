@@ -17,9 +17,12 @@ class QuestionType extends AbstractType {
             ->add('active', 'checkbox', array(
                 'label' => 'Active ?',
                 'required' => false
-            ))
-            ->add('answers', 'collection', array('type' => new AnswerType));
+            ));
 
+    }
+
+    public function getDefaultOptions(array $options) {
+        return array('data_class' => 'Damarion\Domain\Question');
     }
 
     public function getName() {

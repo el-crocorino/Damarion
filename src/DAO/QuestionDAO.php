@@ -170,9 +170,15 @@
             $question = new Question();
 
             $question->set_id($row['question_id']);
-            $question->set_active($row['question_active']);
             $question->set_text($row['question_text']);
             $question->set_order($row['question_order']);
+
+            $question->set_active(false);
+
+            if ($row['question_active'] > 0) {
+                $question->set_active(true);
+            }
+
 
             if (array_key_exists('question_game_id', $row)) {
 

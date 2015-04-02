@@ -134,8 +134,17 @@
 
             $answer->set_id($row['answer_id']);
             $answer->set_text($row['answer_text']);
-            $answer->set_right($row['answer_right']);
-            $answer->set_active($row['answer_active']);
+
+            $answer->set_active(false);
+            $answer->set_right(false);
+
+            if ($row['answer_active'] > 0) {
+                $answer->set_active(true);
+            }
+
+            if ($row['answer_right'] > 0) {
+                $answer->set_right(true);
+            }
 
             if (array_key_exists('answer_question_id', $row)) {
 

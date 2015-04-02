@@ -310,10 +310,6 @@
         $question = $app['dao.question']->find($id);
         $answers = $app['dao.answer']->find_all_by_question($id);
 
-        foreach ($answers AS $value) {
-            $question->add_answer($value);
-        }
-
         $questionForm = $app['form.factory']->create(new QuestionType, $question);
         $questionForm->handleRequest($request);
 
@@ -321,9 +317,24 @@
 
         }
 
+        $answerForms = array();
+
+        foreach ($answers AS $value) {
+
+            $question->add_answer($value);
+            $answerForm = $app['form.factory']->create(new AnswerType, $value);
+            $answerForms[] = $answerForm->createView();
+
+            if ($questionForm->isSubmitted() && $questionForm->isValid()) {
+
+            }
+
+        }
+
         return $app['twig']->render('question_form.html.twig', array(
             'title' => 'Edit question',
-            'questionForm' => $questionForm->createView()
+            'questionForm' => $questionForm->createView(),
+            'answerForms' => $answerForms
             ));
 
     });

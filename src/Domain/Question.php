@@ -53,7 +53,7 @@
          *
          * @var array
          */
-        protected $answers = array();
+        protected $answers = NULL;
 
         /**
          * Sets Id
@@ -150,7 +150,7 @@
          *
          * @param int $answers
          */
-        public function set_answers(ArrayCollection  $answers) {
+        public function set_answers(ArrayCollection $answers) {
             $this->answers = $answers;
         }
 
@@ -161,6 +161,10 @@
          */
         public function get_answers() {
             return $this->answers;
+        }
+
+        public function __construct() {
+            $this->answers = new ArrayCollection();
         }
 
         /**
