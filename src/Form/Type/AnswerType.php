@@ -10,9 +10,10 @@ class AnswerType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options) {
 
         $builder->add('question_id', 'choice', array(
-                'choices' => $options['data'],
+                'choices' => $options['data']->get_questions_list(),
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => false,
+                'label' => 'Question'
             ))
             ->add('text', 'text')
             ->add('right', 'checkbox', array(

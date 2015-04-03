@@ -16,3 +16,52 @@ body {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.menu .nav {
+    display: inline;
+    float:left;
+}
+
+.menu .nav li {
+    display: inline;
+    list-style-type: none;
+}
+
+.menu .jokers {
+    display: inline;
+    float: right;
+}
+
+.menu .jokers li {
+    display: inline;
+    list-style-type: none;
+}
+
+.question .file {
+    width: 90%;
+    margin: 10% auto;
+}
+
+.question {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.text {
+    text-align: center;
+}
+
+ul.answers-list{
+width: 100% ;
+}
+
+ul.answers-list li {
+display:block;
+width : 50%;
+height : 34px;
+float:left;
+}
+
+ul.answers-list li[float="left"] + li {
+float:none;
+}

@@ -197,6 +197,81 @@
             ));
 
     });
+    // Question details with votes
+
+    $app->match('/main', function (Request $request) use ($app) {
+
+        $question = $app['dao.question']->find_current();
+        $question_id = $question->get_id();
+
+        $answers = $app['dao.answer']->find_all_by_question($question_id);
+        $votes = $app['dao.vote']->find_all_by_question($question_id);
+
+        foreach ($answers AS $answer) {
+            $form_option_answers[$answer->get_id()] = $answer->get_text();
+        }
+
+        $user = $app['security']->getToken()->getUser();
+
+        $voteFormView = null;
+        $has_voted = false;
+
+        if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
+
+            // A user is fully authenticated : he can add and see votes
+
+            $vote = new Vote();
+
+            $vote->set_question($question);
+            $vote->set_question_id($question_id);
+
+            $vote->set_user($user);
+            $vote->set_user_id($user->get_id());
+
+            $voteForm = $app['form.factory']->create(new VoteType(), $form_option_answers);
+            $voteForm->handleRequest($request);
+
+            if ($voteForm->isSubmitted() && $voteForm->isValid()) {
+
+                $vote->set_answer_id($voteForm->getViewData()['answer_id']);
+
+                if ($app['dao.vote']->save($vote)) {
+                    $app['session']->getFlashBag()->add('success', 'Votre vote a bien été enregistré');
+                } else {
+                    $app['session']->getFlashBag()->add('error', 'Un seul vote par question !');
+                }
+
+
+            }
+
+            $voteFormView = $voteForm->createView();
+
+            $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
+
+        }
+
+        $votes = $app['dao.vote']->find_all_by_question($question_id);
+        $stats = $app['dao.question']->get_stats_by_question($question_id);
+
+        $user_count = count($app['dao.user']->find_all());
+        $vote_stats = array();
+
+        foreach ($stats AS $vote_data) {
+            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array($vote_data['votes'] / $user_count * 100));
+        }
+
+        $vote_stats = json_encode($vote_stats);
+
+        return $app['twig']->render('main.html.twig', array(
+            'question' => $question,
+            'answers' => $answers,
+            'votes' => $votes,
+            'voteForm' => $voteFormView,
+            'has_voted' => $has_voted,
+            'vote_stats' => $vote_stats
+            ));
+
+    });
 
     // Login Page
 
@@ -469,7 +544,18 @@
     $app->match('/admin/answer/{id}/edit', function($id, Request $request) use ($app) {
 
         $answer = $app['dao.answer']->find($id);
+        $questions = $app['dao.question']->find_all();
+
+        $questions_list = array();
+
+        foreach ($questions AS $value) {
+            $questions_list[$value->get_id()] = $value->get_text();
+        }
+
+        $answer->set_questions_list($questions_list);
+
         $answerForm = $app['form.factory']->create(new AnswerType(), $answer);
+
         $answerForm->handleRequest($request);
 
         if ($answerForm->isSubmitted() && $answerForm->isValid()) {
@@ -479,7 +565,9 @@
 
         return $app['twig']->render('answer_form.html.twig', array(
             'title' => 'Edit answer',
-            'answerForm' => $answerForm->createView()));
+            'answerForm' => $answerForm->createView(),
+            'questions_list' => $questions_list
+            ));
 
     });
 

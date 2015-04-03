@@ -17,9 +17,9 @@
 
     <article>
 
-        <h2>Question {{ question.get_order }} : {{ question.get_text }}</h2>
+        <h2>Question {{ question.get_id }}</h2>
 
-        <h3>Vote</h3>
+        <h3>{{ question.get_text }}</h3>
 
         {% if voteForm %}
 
@@ -52,5 +52,33 @@
         {% endif %}
 
     </article>
+
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto; display:none"></div>
+
+<script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
+
+{% verbatim %}
+
+    <script type="text/javascript">
+
+        $(function() {
+
+            $('#container').highcharts({
+
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+
+            });
+
+        });
+
+    </script>
+
+{% endverbatim %}
 
 {% endblock %}
