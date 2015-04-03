@@ -97,23 +97,26 @@ body {
 
 ul.answers-list{
     width: 100% ;
+    margin: 0;
 }
 
 ul.answers-list li {
     float:left;
+    list-style-type: none;
+    display: block;
+    margin: 5px auto;
+    width : 50%;
+    height: 70px;
+    line-height: 70px;
+
+    background-image: url('img/rep1.png');
 }
 
 ul.answers-list:nth-child(odd) {
-    margin: 5px auto;
-    width: 598px;
-    height: 70px;
     background-image: url('img/rep1.png');
 }
 
 ul.answers-list:nth-child(even) {
-    margin: 5px auto;
-    width : 50%;
-    height: 70px;
     background-image: url('img/rep3.png');
 }
 
