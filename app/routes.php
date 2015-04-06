@@ -35,7 +35,7 @@
 
     $app->get('/hashpwd', function() use ($app) {
 
-        $rawPassword = '<?admin?>';
+        $rawPassword = 'damarion';
         $salt = '%qUgq3NAYfC1MKwrW?yevbE';
         $encoder = $app['security.encoder.digest'];
 

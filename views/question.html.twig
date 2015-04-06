@@ -1,22 +1,26 @@
 {% extends "question_layout.html.twig" %}
 
-{% form_theme voteForm _self %}
+    {% if voteForm %}
 
-{% block choice_widget_expanded %}
+        {% form_theme voteForm _self %}
 
-        {% for child in form %}
+        {% block choice_widget_expanded %}
 
-            <li {{ block('widget_container_attributes') }} class="answer-item even">
+                {% for child in form %}
 
-                <div>
-                    <span class="list-item-header">{{ form_widget(child) }}</span><span class="answer-text">{{ form_label(child) }}</span>
-                </div>
+                    <li {{ block('widget_container_attributes') }} class="answer-item">
 
-            </li>
+                        <div>
+                            <span class="list-item-header">{{ form_widget(child) }}</span><span class="answer-text">{{ form_label(child) }}</span>
+                        </div>
 
-        {% endfor %}
+                    </li>
 
-{% endblock %}
+                {% endfor %}
+
+        {% endblock %}
+
+    {% endif %}
 
 {% block title %}Question {{ question.get_id }}{% endblock %}
 
@@ -24,53 +28,124 @@
 
     <div class="content-main">
 
-            <div class="menu">
+        <div class="menu">
 
-                <ul class="nav">
+            <ul class="nav">
 
-                    <li class="stats"></li>
+                <li class="stats"><img id="stats_btn" src="{{ app.request.basepath }}/css/img/stats.png" alt=""></li>
 
-                    <li></li>
+                <li></li>
 
-                    <li></li>
+                <li></li>
 
-                </ul>
+            </ul>
 
-                <ul class="jokers">
+            <ul class="jokers">
 
-                    <li class="fifty"></li>
+                <li class="fifty"></li>
 
-                    <li class="friend"></li>
+                <li class="friend"></li>
 
-                    <li class="public"></li>
+                <li class="public"></li>
 
-                </ul>
+            </ul>
+
+        </div>
+
+        <br style="clear:both" />
+
+        <div class="container">
+            <div id="img_container" class="question file"><img src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt=""></div>
+            <div id="stats_container" style="display:none"></div>
+        </div>
+
+        <div class="question-text">{{ question.get_text }}</div>
+
+        <div id="answers" class="answers">
+
+        {% if voteForm %}
+
+                {{ form_start(voteForm) }}
+
+                    <ul class="answers-list">
+                        {{ form_errors(voteForm.answer_id) }}
+                        {{ form_widget(voteForm.answer_id) }}
+                    </ul>
+
+                {{ form_end(voteForm) }}
 
             </div>
 
-            <br style="clear:both" />
+        {% endif %}
 
-            <div class="question file"><img src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt=""></div>
+    </div>
 
-            <div class="question-text">{{ question.get_text }}</div>
+    <script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
 
-            <div class="answers">
+    {% verbatim %}
 
-            {% if voteForm %}
+    <script type="text/javascript">
 
-                    {{ form_start(voteForm) }}
+        var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %};
 
-                        <ul class="answers-list">
-                            {{ form_errors(voteForm.answer_id) }}
-                            {{ form_widget(voteForm.answer_id) }}
-                        </ul>
+        (function check_current_question() {
 
-                    {{ form_end(voteForm) }}
+            $.ajax({
 
-                </div>
+                url: '/ajax/check',
+                success: function(data) {
 
-            {% endif %}
+                    if (question_id != data) {
+                        window.location.replace('/question/' + data);
+                    }
 
-        </div>
+                },
+
+                complete: function() {
+
+                  // Schedule the next request when the current one's complete
+
+                  setTimeout(check_current_question, 10000);
+
+                }
+
+            });
+
+        })();
+
+        $(function() {
+
+            $('.answers-list').children().each(function(index) {
+
+                if (index == 1 || index == 3) {
+                    $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/rep3.png)');
+                    $(this).addClass('odd');
+                }
+
+            });
+
+            $('#stats_container').highcharts({
+
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+
+            });
+
+            $("#stats_btn").click(function() {
+            console.log('Kikoo');
+                $("#img_container").toggle();
+                $("#stats_container").toggle();
+            });
+
+        });
+
+        </script>
+
+    {% endverbatim %}
 
 {% endblock %}

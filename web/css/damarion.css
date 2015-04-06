@@ -73,6 +73,17 @@ body {
     background-image: url('img/public.png');
 }
 
+.container {
+    height : 400px;
+    margin: 0 auto;
+}
+
+#stats_container {
+    height: 400px;
+    width: 600px;
+    margin: 0 auto;
+}
+
 .question .file {
     width: 90%;
     margin: 5px auto;
@@ -110,10 +121,6 @@ ul.answers-list li {
     width : 598px;
     height: 70px;
     line-height: 70px;
-    /*background-image: url('img/rep1.png');*/
-}
-
-li.even {
     background-image: url('img/rep1.png');
 }
 
@@ -124,9 +131,15 @@ li.odd {
 .list-item-header {
     display: inline-block;
     color: #d38d5f;
-    margin-left: 137px;
+    margin-left: 118px;
 }
 
 li.odd .list-item-header {
-    margin-left: 55px;
+    margin-left: 35px;
+}
+
+
+input[type="radio"] {
+  margin-top: -5px;
+  vertical-align: middle;
 }
