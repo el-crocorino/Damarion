@@ -73,7 +73,7 @@ body {
     background-image: url('img/public.png');
 }
 
-.container {
+.question_data {
     height : 400px;
     margin: 0 auto;
 }
@@ -138,8 +138,19 @@ li.odd .list-item-header {
     margin-left: 35px;
 }
 
-
 input[type="radio"] {
   margin-top: -5px;
   vertical-align: middle;
+}
+
+.prev {
+    float: left;
+    height: 60px;
+    width: 200px;
+}
+
+.next {
+    float: right;
+    height: 60px;
+    width: 200px;
 }

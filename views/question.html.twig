@@ -54,7 +54,7 @@
 
         <br style="clear:both" />
 
-        <div class="container">
+        <div class="question_data">
             <div id="img_container" class="question file"><img src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt=""></div>
             <div id="stats_container" style="display:none"></div>
         </div>
@@ -63,20 +63,26 @@
 
         <div id="answers" class="answers">
 
-        {% if voteForm %}
+            {% if voteForm %}
 
-                {{ form_start(voteForm) }}
+                    {{ form_start(voteForm) }}
 
-                    <ul class="answers-list">
-                        {{ form_errors(voteForm.answer_id) }}
-                        {{ form_widget(voteForm.answer_id) }}
-                    </ul>
+                        <ul class="answers-list">
+                            {{ form_errors(voteForm.answer_id) }}
+                            {{ form_widget(voteForm.answer_id) }}
+                        </ul>
 
-                {{ form_end(voteForm) }}
+                    {{ form_end(voteForm) }}
 
-            </div>
+            {% endif %}
 
-        {% endif %}
+        </div>
+
+        <div class="form-group">
+            <div class="prev"></div>
+            <div class="next"></div>
+        </div>
+{{ question.get_game.get_friend }}
 
     </div>
 
@@ -84,65 +90,144 @@
 
     {% verbatim %}
 
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-        var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %};
+            var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %},
+                question_order = {% endverbatim %}{{ question.get_order }}{% verbatim %},
+                friend = {% endverbatim %}{{ dump(question.get_game.get_friend) }}{% verbatim %},
+                public = {% endverbatim %}{{ question.get_game.get_public }}{% verbatim %},
+                fifty = {% endverbatim %}{{ question.get_game.get_fifty }}{% verbatim %};
 
-        (function check_current_question() {
+            function set_previous_question(question_order) {
 
-            $.ajax({
-
-                url: '/ajax/check',
-                success: function(data) {
-
-                    if (question_id != data) {
+                $.ajax({
+                    url: '/ajax/prev/' + question_order,
+                    success: function(data) {
                         window.location.replace('/question/' + data);
                     }
 
-                },
+                });
 
-                complete: function() {
+            }
 
-                  // Schedule the next request when the current one's complete
+            function set_next_question(question_order) {
 
-                  setTimeout(check_current_question, 10000);
+                $.ajax({
 
+                    url: '/ajax/next/' + question_order,
+                    success: function(data) {
+                        window.location.replace('/question/' + data);
+                    }
+
+                });
+
+            }
+
+            function use_joker(joker) {
+
+                $.ajax({
+
+                    url: '/ajax/joker/' + joker,
+                    success: function() {
+                    }
+
+                });
+
+            }
+
+            (function check_current_question() {
+
+                $.ajax({
+
+                    url: '/ajax/check',
+                    success: function(data) {
+
+                        if (question_id != data) {
+                            window.location.replace('/question/' + data);
+                        }
+
+                    },
+
+                    complete: function() {
+
+                      // Schedule the next request when the current one's complete
+
+                      setTimeout(check_current_question, 10000);
+
+                    }
+
+                });
+
+            })();
+
+            $(function() {
+
+                $('.answers-list').children().each(function(index) {
+
+                    if (index == 1 || index == 3) {
+                        $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/rep3.png)');
+                        $(this).addClass('odd');
+                    }
+
+                });
+
+                $('input[type=radio]').click(function() {
+                    $(this).closest("form").submit();
+                });
+
+                $('#stats_container').highcharts({
+
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+
+                });
+
+                $('.prev').click(function() {
+                    set_previous_question(question_order);
+                });
+
+                $('.next').click(function() {
+                    set_next_question(question_order);
+                });
+
+                $("#stats_btn").click(function() {
+                    $("#img_container").toggle();
+                    $("#stats_container").toggle();
+                });
+
+                if (fifty) {
+                    $(".fifty").css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/fifty2.png)');
                 }
 
-            });
-
-        })();
-
-        $(function() {
-
-            $('.answers-list').children().each(function(index) {
-
-                if (index == 1 || index == 3) {
-                    $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/rep3.png)');
-                    $(this).addClass('odd');
+                if (friend) {
+                    $(".friend").css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/friend2.png)');
                 }
 
+                if (public) {
+                    $(".public").css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/public2.png)');
+                }
+
+                $(".fifty").click(function() {
+                    use_joker('fifty');
+                    $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/fifty2.png)');
+                });
+
+                $(".friend").click(function() {
+                    use_joker('friend');
+                    $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/friend2.png)');
+                });
+
+                $(".public").click(function() {
+                    use_joker('public');
+                    $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/public2.png)');
+                });
+
             });
-
-            $('#stats_container').highcharts({
-
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: ''
-                },
-                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
-
-            });
-
-            $("#stats_btn").click(function() {
-            console.log('Kikoo');
-                $("#img_container").toggle();
-                $("#stats_container").toggle();
-            });
-
-        });
 
         </script>
 

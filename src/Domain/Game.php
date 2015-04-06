@@ -16,6 +16,27 @@
          */
         protected $title = '';
 
+
+        /**
+         * game friend joker
+         * @var string
+         */
+        protected $friend = '';
+
+
+        /**
+         * game public joker
+         * @var string
+         */
+        protected $public = '';
+
+
+        /**
+         * game fifty joker
+         * @var string
+         */
+        protected $fifty = '';
+
         /**
          * Sets id
          *
@@ -68,6 +89,114 @@
          */
         public function getTitle() {
             return $this->title;
+        }
+
+        /**
+         * Sets friend
+         *
+         * @param int $friend
+         */
+        public function set_friend($friend) {
+            $this->friend = $friend;
+        }
+
+        /**
+         * Gets friend
+         *
+         * @return string
+         */
+        public function get_friend() {
+            return $this->friend;
+        }
+
+        /**
+         * Sets friend
+         *
+         * @param int $friend
+         */
+        public function setFriend($friend) {
+            $this->friend = $friend;
+        }
+
+        /**
+         * Gets friend
+         *
+         * @return string
+         */
+        public function getFriend() {
+            return $this->friend;
+        }
+
+        /**
+         * Sets public
+         *
+         * @param int $public
+         */
+        public function set_public($public) {
+            $this->public = $public;
+        }
+
+        /**
+         * Gets public
+         *
+         * @return string
+         */
+        public function get_public() {
+            return $this->public;
+        }
+
+        /**
+         * Sets public
+         *
+         * @param int $public
+         */
+        public function setPublic($public) {
+            $this->public = $public;
+        }
+
+        /**
+         * Gets public
+         *
+         * @return string
+         */
+        public function getPublic() {
+            return $this->public;
+        }
+
+        /**
+         * Sets fifty
+         *
+         * @param int $fifty
+         */
+        public function set_fifty($fifty) {
+            $this->fifty = $fifty;
+        }
+
+        /**
+         * Gets fifty
+         *
+         * @return string
+         */
+        public function get_fifty() {
+            return $this->fifty;
+        }
+
+        /**
+         * Sets fifty
+         *
+         * @param int $fifty
+         */
+        public function setFifty($fifty) {
+            $this->fifty = $fifty;
+        }
+
+        /**
+         * Gets fifty
+         *
+         * @return string
+         */
+        public function getFifty() {
+            return $this->fifty;
         }
 
     }

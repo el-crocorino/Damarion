@@ -53,4 +53,50 @@
 
     </article>
 
+        <script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
+
+    {% verbatim %}
+
+        <script type="text/javascript">
+
+            var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %};
+            var question_order = {% endverbatim %}{{ question.get_order }}{% verbatim %};
+
+            (function check_current_question() {
+
+                $.ajax({
+
+                    url: '/ajax/check',
+                    success: function(data) {
+
+                        if (question_id != data) {
+                            window.location.replace('/question/' + data);
+                        }
+
+                    },
+
+                    complete: function() {
+
+                      // Schedule the next request when the current one's complete
+
+                      setTimeout(check_current_question, 10000);
+
+                    }
+
+                });
+
+            })();
+
+            $(function() {
+
+                $('input[type=radio]').click(function() {
+                    $(this).closest("form").submit();
+                });
+
+            });
+
+        </script>
+
+    {% endverbatim %}
+
 {% endblock %}

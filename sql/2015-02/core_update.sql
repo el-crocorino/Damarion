@@ -19,10 +19,12 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `game`
 --
 
-DROP TABLE IF EXISTS `game`;
 CREATE TABLE IF NOT EXISTS `game` (
   `game_id` int(10) NOT NULL AUTO_INCREMENT,
   `game_title` varchar(25) NOT NULL,
+  `game_friend` tinyint(1) DEFAULT NULL,
+  `game_public` tinyint(1) DEFAULT NULL,
+  `game_fifty` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
@@ -30,8 +32,9 @@ CREATE TABLE IF NOT EXISTS `game` (
 -- Daten für Tabelle `game`
 --
 
-INSERT INTO `game` (`game_id`, `game_title`) VALUES
-(1, 'test');
+INSERT INTO `game` (`game_id`, `game_title`, `game_friend`, `game_public`, `game_fifty`) VALUES
+(1, 'test2', NULL, NULL, NULL),
+(3, 'test 3', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 

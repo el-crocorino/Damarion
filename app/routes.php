@@ -51,6 +51,52 @@
 
     });
 
+    $app->match('/ajax/joker{joker}', function ($joker, Request $request) use ($app) {
+
+        $question = $app['dao.question']->find_current();
+        $game = $question->get_game();
+
+        $fn = 'set_' . $joker;
+
+        $game->$fn(true);
+        $app['dao.game']->save($game);
+
+        return $question->get_id();
+
+    });
+
+    $app->match('/ajax/prev/{question_order}', function ($question_order, Request $request) use ($app) {
+
+        $prev_order = $question_order - 1;
+
+        $question = $app['dao.question']->find_by_order($question_order);
+        $question->set_active(false);
+        $app['dao.question']->save($question);
+
+        $prev_question = $app['dao.question']->find_by_order($prev_order);
+        $prev_question->set_active(true);
+        $app['dao.question']->save($prev_question);
+
+        return $prev_question->get_id();
+
+    });
+
+    $app->match('/ajax/next/{question_order}', function ($question_order, Request $request) use ($app) {
+
+        $next_order = $question_order + 1;
+
+        $question = $app['dao.question']->find_by_order($question_order);
+        $question->set_active(false);
+        $app['dao.question']->save($question);
+
+        $next_question = $app['dao.question']->find_by_order($next_order);
+        $next_question->set_active(true);
+        $app['dao.question']->save($next_question);
+
+        return $next_question->get_id();
+
+    });
+
     // Question Page
 
     /*$app->get('/question/{question_id}', function($question_id) use ($app) {
@@ -73,7 +119,7 @@
         $question = $app['dao.question']->find($question_id);
         $answers = $app['dao.answer']->find_all_by_question($question_id);
         $votes = $app['dao.vote']->find_all_by_question($question_id);
-
+var_dump($question->get_game()->get_fifty());
         foreach ($answers AS $answer) {
             $form_option_answers[$answer->get_id()] = $answer->get_text();
         }
