@@ -1,74 +1,76 @@
-{% extends "layout.html.twig" %}
+{% extends "question_layout.html.twig" %}
+
+{% form_theme voteForm _self %}
+
+{% block choice_widget_expanded %}
+
+        {% for child in form %}
+
+            <li {{ block('widget_container_attributes') }} class="answer-item even">
+
+                <div>
+                    <span class="list-item-header">{{ form_widget(child) }}</span><span class="answer-text">{{ form_label(child) }}</span>
+                </div>
+
+            </li>
+
+        {% endfor %}
+
+{% endblock %}
 
 {% block title %}Question {{ question.get_id }}{% endblock %}
 
 {% block content %}
 
-    <article>
+    <div class="content-main">
 
-        <h2>Question {{ question.get_id }} : {{ question.get_text }}</h2>
+            <div class="menu">
 
-        <h3>Vote</h3>
+                <ul class="nav">
 
-        {% if voteForm %}
+                    <li class="stats"></li>
 
-            {% if has_voted %}
-                Vous avez déjà voté.
-            {% else %}
-            {{ form_start(voteForm) }}
-                <div class="form-group">
-                    {{ form_errors(voteForm.answer_id) }}
-                    {{ form_widget(voteForm.answer_id) }}
-                    {{ dump(form_widget(voteForm.answer_id)) }}
+                    <li></li>
+
+                    <li></li>
+
+                </ul>
+
+                <ul class="jokers">
+
+                    <li class="fifty"></li>
+
+                    <li class="friend"></li>
+
+                    <li class="public"></li>
+
+                </ul>
+
+            </div>
+
+            <br style="clear:both" />
+
+            <div class="question file"><img src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt=""></div>
+
+            <div class="question-text">{{ question.get_text }}</div>
+
+            <div class="answers">
+
+            {% if voteForm %}
+
+                    {{ form_start(voteForm) }}
+
+                        <ul class="answers-list">
+                            {{ form_errors(voteForm.answer_id) }}
+                            {{ form_widget(voteForm.answer_id) }}
+                        </ul>
+
+                    {{ form_end(voteForm) }}
+
                 </div>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Vote" />
-                </div>
-            {{ form_end(voteForm) }}
-            {% for flashMessage in app.session.flashbag.get('success') %}
-                <div class="alert alert-success">
-                    {{ flashMessage }}
-                </div>
-            {% endfor %}
-            {% for flashMessage in app.session.flashbag.get('error') %}
-                <div class="alert alert-error">
-                    {{ flashMessage }}
-                </div>
-            {% endfor %}
+
             {% endif %}
 
-        {% else %}
-            <a href="{{ path('login') }} ">Connectez-vous</a> pour pouvoir voter.
-        {% endif %}
-
-    </article>
-
-    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-<script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
-
-{% verbatim %}
-
-    <script type="text/javascript">
-
-        $(function() {
-
-            $('#container').highcharts({
-
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: ''
-                },
-                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
-
-            });
-
-        });
-
-    </script>
-
-{% endverbatim %}
+        </div>
 
 {% endblock %}

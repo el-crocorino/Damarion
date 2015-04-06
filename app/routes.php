@@ -43,6 +43,14 @@
 
     });
 
+    $app->get('/ajax/check', function() use ($app) {
+
+        $question = $app['dao.question']->find_current();
+
+        return $question->get_id();
+
+    });
+
     // Question Page
 
     /*$app->get('/question/{question_id}', function($question_id) use ($app) {

@@ -27,13 +27,14 @@ body {
     margin: 0 auto;
     width: 1280px;
     height: 800px;
-    background-image: url('img/contentbackground.jpg');
+    background-image: url('img/content_background.png');
 
 }
 
 .menu .nav {
     display: inline;
     float:left;
+    margin: 0px;
 }
 
 .menu .nav li {
@@ -50,6 +51,7 @@ body {
 .menu .jokers {
     display: inline;
     float: right;
+    margin: 0px;
 }
 
 .menu .jokers li {
@@ -73,7 +75,7 @@ body {
 
 .question .file {
     width: 90%;
-    margin: 10% auto;
+    margin: 5px auto;
     min-height: 300px;
 }
 .question img{
@@ -104,27 +106,27 @@ ul.answers-list li {
     float:left;
     list-style-type: none;
     display: block;
-    margin: 5px auto;
-    width : 50%;
+    margin: 5px;
+    width : 598px;
     height: 70px;
     line-height: 70px;
+    /*background-image: url('img/rep1.png');*/
+}
 
+li.even {
     background-image: url('img/rep1.png');
 }
 
-ul.answers-list:nth-child(odd) {
-    background-image: url('img/rep1.png');
-}
-
-ul.answers-list:nth-child(even) {
+li.odd {
     background-image: url('img/rep3.png');
 }
 
-ul.answers-list li[float="left"] + li {
-    float:none;
+.list-item-header {
+    display: inline-block;
+    color: #d38d5f;
+    margin-left: 137px;
 }
 
-.answer-item div {
-
-    margin: 0 auto;
+li.odd .list-item-header {
+    margin-left: 55px;
 }

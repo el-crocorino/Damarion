@@ -1,0 +1,98 @@
+
+
+{% block content %}
+
+    <article>
+
+        <h2>Question {{ question.get_id }} : {{ question.get_text }}</h2>
+
+        <h3>Vote</h3>
+
+        {% if voteForm %}
+
+            {% if has_voted %}
+                Vous avez déjà voté.
+            {% else %}
+            {{ form_start(voteForm) }}
+                <div class="form-group">
+                    {{ form_errors(voteForm.answer_id) }}
+                    {{ form_widget(voteForm.answer_id) }}
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Vote" />
+                </div>
+            {{ form_end(voteForm) }}
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('error') %}
+                <div class="alert alert-error">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% endif %}
+
+        {% else %}
+            <a href="{{ path('login') }} ">Connectez-vous</a> pour pouvoir voter.
+        {% endif %}
+
+    </article>
+
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
+
+{% verbatim %}
+
+    <script type="text/javascript">
+
+        var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %};
+
+        (function check_current_question() {
+
+            $.ajax({
+
+                url: '/ajax/check',
+                success: function(data) {
+
+                    if (question_id != data) {
+                        window.location.replace('/question/' + data);
+                    }
+
+                },
+
+                complete: function() {
+
+                  // Schedule the next request when the current one's complete
+
+                  setTimeout(check_current_question, 10000);
+
+                }
+
+            });
+
+        })();
+
+        $(function() {
+
+            $('#container').highcharts({
+
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+
+            });
+
+        });
+
+    </script>
+
+{% endverbatim %}
+
+{% endblock %}

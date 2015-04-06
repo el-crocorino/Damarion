@@ -3,7 +3,7 @@
 {% form_theme voteForm _self %}
 
 {% block choice_widget_expanded %}
-        {% for child in form %}
+        {% for child in voteForm %}
             <div {{ block('widget_container_attributes') }}>
                 {{ form_widget(child) }}
                 {{ form_label(child) }}
@@ -55,30 +55,57 @@
 
     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto; display:none"></div>
 
-<script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
+    <script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
 
-{% verbatim %}
+    {% verbatim %}
 
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-        $(function() {
+            var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %};
 
-            $('#container').highcharts({
+            (function check_current_question() {
 
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: ''
-                },
-                series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+                $.ajax({
+
+                    url: '/ajax/check',
+                    success: function(data) {
+
+                        if (question_id != data) {
+                            window.location.replace('/question/' + data);
+                        }
+
+                    },
+
+                    complete: function() {
+
+                      // Schedule the next request when the current one's complete
+
+                      setTimeout(check_current_question, 10000);
+
+                    }
+
+                });
+
+            })();
+
+            $(function() {
+
+                $('#container').highcharts({
+
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+
+                });
 
             });
 
-        });
+        </script>
 
-    </script>
-
-{% endverbatim %}
+    {% endverbatim %}
 
 {% endblock %}
