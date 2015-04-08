@@ -134,6 +134,25 @@
 
         }
 
+
+        /**
+         * Return a id of right answer.
+         *
+         * @return array A list of all questions.
+         */
+        public function get_right_answer($question_id) {
+
+            $sql = 'SELECT answer_id FROM answer WHERE answer_question_id = ' . $question_id . ' and answer_right = 1';
+            $row = $this->get_db()->fetchAssoc($sql);
+
+            if ($row) {
+                return $row['answer_id'];
+            } else {
+                throw new \Exception("No right answer for queston with id " . $id);
+            }
+
+        }
+
         /**
          * Return an array of votes stats for given question id.
          *

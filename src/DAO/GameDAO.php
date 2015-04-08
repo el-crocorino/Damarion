@@ -61,9 +61,9 @@
 
             $game->set_id($row['game_id']);
             $game->set_title($row['game_title']);
-            $game->set_friend((boolean)$row['game_friend']);
-            $game->set_public((boolean)$row['game_public']);
-            $game->set_fifty((boolean)$row['game_fifty']);
+            $game->set_friend((int)$row['game_friend']);
+            $game->set_public((int)$row['game_public']);
+            $game->set_fifty((int)$row['game_fifty']);
 
             return $game;
 

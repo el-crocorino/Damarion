@@ -82,7 +82,6 @@
             <div class="prev"></div>
             <div class="next"></div>
         </div>
-{{ question.get_game.get_friend }}
 
     </div>
 
@@ -94,9 +93,41 @@
 
             var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %},
                 question_order = {% endverbatim %}{{ question.get_order }}{% verbatim %},
-                friend = {% endverbatim %}{{ dump(question.get_game.get_friend) }}{% verbatim %},
-                public = {% endverbatim %}{{ question.get_game.get_public }}{% verbatim %},
-                fifty = {% endverbatim %}{{ question.get_game.get_fifty }}{% verbatim %};
+                question_fifty = {% endverbatim %}{{ question.get_game.get_fifty }}{% verbatim %},
+                question_friend = {% endverbatim %}{{ question.get_game.get_friend }}{% verbatim %},
+                question_public = {% endverbatim %}{{ question.get_game.get_public }}{% verbatim %},
+                right_answer = {% endverbatim %}{{ right_answer }}{% verbatim %},
+                user_vote_id = {% endverbatim %}{{ user_vote_id }}{% verbatim %};
+
+            function highlight_right_question() {
+
+                var id = null;
+
+                $('.list-item-header').each(function(index) {
+
+                    if (right_answer == $(this.children[0]).val()) {
+                        id = $(this.children[0]).attr('id');
+                    }
+
+                });
+
+                $('.required').each(function(index) {
+
+                    if ($(this).attr('for') == user_vote_id) {
+                        id = $(this).css('color', '#d45500');
+                    }
+
+                });
+
+                $('.required').each(function(index) {
+
+                    if ($(this).attr('for') == id) {
+                        id = $(this).css('color', '#008000');
+                    }
+
+                });
+
+            }
 
             function set_previous_question(question_order) {
 
@@ -162,6 +193,8 @@
 
             $(function() {
 
+                // Answers Style
+
                 $('.answers-list').children().each(function(index) {
 
                     if (index == 1 || index == 3) {
@@ -175,17 +208,60 @@
                     $(this).closest("form").submit();
                 });
 
+                // Highcharts Conf
+
+                var perShapeGradient = {
+                    x1: 0,
+                    y1: 1,
+                    x2: 0,
+                    y2: 0
+                };
+
                 $('#stats_container').highcharts({
 
                     chart: {
+                        backgroundColor: {
+                            linearGradient: [0, 1, 0, 0],
+                            stops: [
+                                [0, 'rgb(0, 0, 36)'],
+                                [1, 'rgb(0, 0, 77)']
+                            ]
+                        },
                         type: 'column'
                     },
+                    colors: [{
+                        linearGradient: perShapeGradient,
+                        stops: [
+                            [0, 'rgb(121, 0, 121)'],
+                            [1, 'rgb(0, 248, 252)']
+                            ]
+                        },{
+                        linearGradient: perShapeGradient,
+                        stops: [
+                            [0, 'rgb(134, 0, 0)'],
+                            [1, 'rgb(0, 248, 252)']
+                            ]
+                        },{
+                        linearGradient: perShapeGradient,
+                        stops: [
+                            [0, 'rgb(0, 36, 4)'],
+                            [1, 'rgb(0, 248, 252)']
+                            ]
+                        },{
+                        linearGradient: perShapeGradient,
+                        stops: [
+                            [0, 'rgb(19, 255, 84)'],
+                            [1, 'rgb(0, 248, 252)']
+                            ]
+                        }],
                     title: {
                         text: ''
                     },
                     series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
 
                 });
+
+                // Click events
 
                 $('.prev').click(function() {
                     set_previous_question(question_order);
@@ -200,15 +276,15 @@
                     $("#stats_container").toggle();
                 });
 
-                if (fifty) {
+                if (question_fifty == 1) {
                     $(".fifty").css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/fifty2.png)');
                 }
 
-                if (friend) {
+                if (question_friend == 1) {
                     $(".friend").css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/friend2.png)');
                 }
 
-                if (public) {
+                if (question_public == 1) {
                     $(".public").css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/public2.png)');
                 }
 
@@ -226,6 +302,8 @@
                     use_joker('public');
                     $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/public2.png)');
                 });
+
+                highlight_right_question();
 
             });
 

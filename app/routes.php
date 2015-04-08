@@ -51,7 +51,7 @@
 
     });
 
-    $app->match('/ajax/joker{joker}', function ($joker, Request $request) use ($app) {
+    $app->match('/ajax/joker/{joker}', function ($joker, Request $request) use ($app) {
 
         $question = $app['dao.question']->find_current();
         $game = $question->get_game();
@@ -118,8 +118,9 @@
 
         $question = $app['dao.question']->find($question_id);
         $answers = $app['dao.answer']->find_all_by_question($question_id);
+        $right_answer = $app['dao.question']->get_right_answer($question_id);
         $votes = $app['dao.vote']->find_all_by_question($question_id);
-var_dump($question->get_game()->get_fifty());
+
         foreach ($answers AS $answer) {
             $form_option_answers[$answer->get_id()] = $answer->get_text();
         }
@@ -128,6 +129,8 @@ var_dump($question->get_game()->get_fifty());
 
         $voteFormView = null;
         $has_voted = false;
+        $is_right = 0;
+        $user_vote_id = 0;
 
         if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
 
@@ -154,12 +157,18 @@ var_dump($question->get_game()->get_fifty());
                     $app['session']->getFlashBag()->add('error', 'Un seul vote par question !');
                 }
 
+                $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
+                $user_vote = $app['dao.vote']->find_all_by_question_and_user($vote->get_question_id(), $vote->get_user_id());
+
+                if ($has_voted && $user_vote[0]->get_answer_id() == $right_answer) {
+                    $is_right = 1;
+                }
+
+                $user_vote_id = $user_vote[0]->get_answer_id();
 
             }
 
             $voteFormView = $voteForm->createView();
-
-            $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
 
         }
 
@@ -170,7 +179,7 @@ var_dump($question->get_game()->get_fifty());
         $vote_stats = array();
 
         foreach ($stats AS $vote_data) {
-            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array($vote_data['votes'] / $user_count * 100));
+            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array(round($vote_data['votes'] / $user_count * 100)));
         }
 
         $vote_stats = json_encode($vote_stats);
@@ -181,6 +190,9 @@ var_dump($question->get_game()->get_fifty());
             'votes' => $votes,
             'voteForm' => $voteFormView,
             'has_voted' => $has_voted,
+            'user_vote_id' => $user_vote_id,
+            'right_answer' => $right_answer,
+            'is_right' => $is_right,
             'vote_stats' => $vote_stats
             ));
 
