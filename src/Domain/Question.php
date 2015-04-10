@@ -46,7 +46,7 @@
          *
          * @var int
          */
-        protected $has_picture_after = false;
+        protected $has_picture_after = 0;
 
         /**
          * question game

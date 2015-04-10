@@ -117,7 +117,7 @@
         }
 
         /**
-         * Return a list of all questions, sorted by date (most recent first).
+         * Return current question.
          *
          * @return array A list of all questions.
          */
@@ -191,7 +191,7 @@
             $question->set_id($row['question_id']);
             $question->set_text($row['question_text']);
             $question->set_order($row['question_order']);
-            $question->set_has_picture_after($row['question_has_picture_after']);
+            $question->set_has_picture_after((boolean)$row['question_has_picture_after']);
 
             $question->set_active(false);
 
@@ -226,7 +226,7 @@
                 'question_text' => $question->get_text(),
                 'question_order' => $question->get_order(),
                 'question_active' => $question->get_active(),
-                'question_has_picture_after' => $question->get_has_picture_after()
+                'question_has_picture_after' => (boolean)$question->get_has_picture_after()
             );
 
             if ($question->get_id()) {

@@ -55,7 +55,7 @@
         <br style="clear:both" />
 
         <div class="question_data">
-            <div id="img_container" class="question file"><img src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt=""></div>
+            <div id="img_container" class="question file"><img id="question_img" src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt="" style="{% if question.get_has_picture_after == 1 %}display:none;{% endif %}"></div>
             <div id="stats_container" style="display:none"></div>
         </div>
 
@@ -80,6 +80,7 @@
 
         <div class="form-group">
             <div class="prev"></div>
+            <div class="reload"></div>
             <div class="next"></div>
         </div>
 
@@ -149,6 +150,10 @@
                 highlight_user_vote();
                 highlight_right_answer();
 
+            }
+
+            function show_picture_after() {
+                $('#question_img').show();
             }
 
             function set_previous_question(question_order) {
@@ -293,6 +298,10 @@
                     set_next_question(question_order);
                 });
 
+                $('.reload').click(function() {
+                    window.location.replace('/question/' + question_id);
+                });
+
                 $("#stats_btn").click(function() {
                     $("#img_container").toggle();
                     $("#stats_container").toggle();
@@ -324,9 +333,10 @@
                     use_joker('public');
                     $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/public2.png)');
                 });
-console.log(has_voted);
+
                 if (has_voted > 0) {
                     highlight_answers();
+                    show_picture_after();
                 }
 
 
