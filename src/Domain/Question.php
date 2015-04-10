@@ -42,7 +42,14 @@
         protected $order = 0;
 
         /**
-         * question order
+         * question has picture after
+         *
+         * @var int
+         */
+        protected $has_picture_after = false;
+
+        /**
+         * question game
          *
          * @var int
          */
@@ -143,6 +150,24 @@
          */
         public function get_order() {
             return $this->order;
+        }
+
+        /**
+         * Sets has_picture_after
+         *
+         * @param int $has_picture_after
+         */
+        public function set_has_picture_after($has_picture_after) {
+            $this->has_picture_after = $has_picture_after;
+        }
+
+        /**
+         * Gets has_picture_after
+         *
+         * @return int
+         */
+        public function get_has_picture_after() {
+            return $this->has_picture_after;
         }
 
         /**
@@ -326,6 +351,24 @@
          */
         public function getOrder() {
             return $this->order;
+        }
+
+        /**
+         * Sets has_picture_after
+         *
+         * @param int $has_picture_after
+         */
+        public function setHasPictureAfter($has_picture_after) {
+            $this->has_picture_after = $has_picture_after;
+        }
+
+        /**
+         * Gets has_picture_after
+         *
+         * @return int
+         */
+        public function getHasPictureAfter() {
+            return $this->has_picture_after;
         }
 
         /**

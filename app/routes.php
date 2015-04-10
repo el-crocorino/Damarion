@@ -587,8 +587,10 @@
             $questions_list[$value->get_id()] = $value->get_text();
         }
 
+        $answer->set_questions_list($questions_list);
+
         $answer = new Answer();
-        $answerForm = $app['form.factory']->create(new AnswerType(), $questions_list);
+        $answerForm = $app['form.factory']->create(new AnswerType(), $answer);
         $answerForm->handleRequest($request);
 
         if ($answerForm->isSubmitted() && $answerForm->isValid()) {
@@ -598,7 +600,6 @@
             $answer->set_text($answer_data['text']);
             $answer->set_right($answer_data['right']);
             $answer->set_active($answer_data['active']);
-
 
             $app['dao.answer']->save($answer);
             $app['session']->getFlashBag()->add('success', 'The answer was successfully created.');
