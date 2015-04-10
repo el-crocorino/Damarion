@@ -96,10 +96,33 @@
                 question_fifty = {% endverbatim %}{{ question.get_game.get_fifty }}{% verbatim %},
                 question_friend = {% endverbatim %}{{ question.get_game.get_friend }}{% verbatim %},
                 question_public = {% endverbatim %}{{ question.get_game.get_public }}{% verbatim %},
+                has_voted = {% endverbatim %}{{ has_voted }}{% verbatim %},
                 right_answer = {% endverbatim %}{{ right_answer }}{% verbatim %},
                 user_vote_id = {% endverbatim %}{{ user_vote_id }}{% verbatim %};
 
-            function highlight_right_question() {
+            function highlight_user_vote() {
+
+                var id = null;
+
+                $('.list-item-header').each(function(index) {
+
+                    if (user_vote_id == $(this.children[0]).val()) {
+                        id = $(this.children[0]).attr('id');
+                    }
+
+                });
+
+                $('.required').each(function(index) {
+
+                    if ($(this).attr('for') == id) {
+                        $(this).css('color', '#d45500');
+                    }
+
+                });
+
+            }
+
+            function highlight_right_answer() {
 
                 var id = null;
 
@@ -113,19 +136,18 @@
 
                 $('.required').each(function(index) {
 
-                    if ($(this).attr('for') == user_vote_id) {
-                        id = $(this).css('color', '#d45500');
-                    }
-
-                });
-
-                $('.required').each(function(index) {
-
                     if ($(this).attr('for') == id) {
-                        id = $(this).css('color', '#008000');
+                        $(this).css('color', '#008000');
                     }
 
                 });
+
+            }
+
+            function highlight_answers() {
+
+                highlight_user_vote();
+                highlight_right_answer();
 
             }
 
@@ -302,8 +324,11 @@
                     use_joker('public');
                     $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/public2.png)');
                 });
+console.log(has_voted);
+                if (has_voted > 0) {
+                    highlight_answers();
+                }
 
-                highlight_right_question();
 
             });
 

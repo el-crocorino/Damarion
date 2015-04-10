@@ -128,11 +128,25 @@
         $user = $app['security']->getToken()->getUser();
 
         $voteFormView = null;
-        $has_voted = false;
+        $has_voted = 0;
         $is_right = 0;
         $user_vote_id = 0;
 
         if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
+
+            $has_voted = count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
+
+            if ($has_voted > 0) {
+
+                $user_vote = $app['dao.vote']->find_all_by_question_and_user($question->get_id(), $user->get_id());
+
+                if ($has_voted && $user_vote[0]->get_answer_id() == $right_answer) {
+                    $is_right = 1;
+                }
+
+                $user_vote_id = (int)$user_vote[0]->get_answer_id();
+
+            }
 
             // A user is fully authenticated : he can add and see votes
 
@@ -156,15 +170,6 @@
                 } else {
                     $app['session']->getFlashBag()->add('error', 'Un seul vote par question !');
                 }
-
-                $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
-                $user_vote = $app['dao.vote']->find_all_by_question_and_user($vote->get_question_id(), $vote->get_user_id());
-
-                if ($has_voted && $user_vote[0]->get_answer_id() == $right_answer) {
-                    $is_right = 1;
-                }
-
-                $user_vote_id = $user_vote[0]->get_answer_id();
 
             }
 
