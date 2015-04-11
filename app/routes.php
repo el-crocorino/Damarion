@@ -33,6 +33,25 @@
 
     });
 
+    $app->get('/list', function() use ($app) {
+
+        $questions = $app['dao.question']->find_all();
+
+        $answers = $app['dao.answer']->find_all();
+        $games = $app['dao.game']->find_all();
+        $users = $app['dao.user']->find_all();
+        $votes = $app['dao.vote']->find_all();
+
+        return $app['twig']->render('list.html.twig', array(
+            'questions' => $questions,
+            'answers' => $answers,
+            'games' => $games,
+            'users' => $users,
+            'votes' => $votes
+        ));
+
+    });
+
     $app->get('/hashpwd', function() use ($app) {
 
         $rawPassword = 'damarion';
@@ -97,21 +116,6 @@
 
     });
 
-    // Question Page
-
-    /*$app->get('/question/{question_id}', function($question_id) use ($app) {
-
-        $question = $app['dao.question']->find($question_id);
-        $answers = $app['dao.answer']->find_all_by_question($question_id);
-        $votes = $app['dao.vote']->find_all_by_question($question_id);
-
-        return $app['twig']->render('question.html.twig', array(
-            'question' => $question,
-            'answers' => $answers,
-            'votes' => $votes
-        ));
-
-    });*/
     // Question details with votes
 
     $app->match('/question/{question_id}', function ($question_id, Request $request) use ($app) {
@@ -274,8 +278,8 @@
 
         $question = $app['dao.question']->find_current();
         $question_id = $question->get_id();
-
         $answers = $app['dao.answer']->find_all_by_question($question_id);
+        $right_answer = $app['dao.question']->get_right_answer($question_id);
         $votes = $app['dao.vote']->find_all_by_question($question_id);
 
         foreach ($answers AS $answer) {
@@ -285,9 +289,25 @@
         $user = $app['security']->getToken()->getUser();
 
         $voteFormView = null;
-        $has_voted = false;
+        $has_voted = 0;
+        $is_right = 0;
+        $user_vote_id = 0;
 
         if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
+
+            $has_voted = count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
+
+            if ($has_voted > 0) {
+
+                $user_vote = $app['dao.vote']->find_all_by_question_and_user($question->get_id(), $user->get_id());
+
+                if ($has_voted && $user_vote[0]->get_answer_id() == $right_answer) {
+                    $is_right = 1;
+                }
+
+                $user_vote_id = (int)$user_vote[0]->get_answer_id();
+
+            }
 
             // A user is fully authenticated : he can add and see votes
 
@@ -312,12 +332,9 @@
                     $app['session']->getFlashBag()->add('error', 'Un seul vote par question !');
                 }
 
-
             }
 
             $voteFormView = $voteForm->createView();
-
-            $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
 
         }
 
@@ -328,17 +345,20 @@
         $vote_stats = array();
 
         foreach ($stats AS $vote_data) {
-            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array($vote_data['votes'] / $user_count * 100));
+            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array(round($vote_data['votes'] / $user_count * 100)));
         }
 
         $vote_stats = json_encode($vote_stats);
 
-        return $app['twig']->render('main.html.twig', array(
+        return $app['twig']->render('question.html.twig', array(
             'question' => $question,
             'answers' => $answers,
             'votes' => $votes,
             'voteForm' => $voteFormView,
             'has_voted' => $has_voted,
+            'user_vote_id' => $user_vote_id,
+            'right_answer' => $right_answer,
+            'is_right' => $is_right,
             'vote_stats' => $vote_stats
             ));
 

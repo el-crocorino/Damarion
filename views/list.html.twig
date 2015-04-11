@@ -1,0 +1,21 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}Start{% endblock %}
+
+{% block content %}
+
+    {% for question in questions %}
+
+        <article>
+
+            <h2><a class="questionTitle" href="/question/{{ question.get_id }}">Question {{ question.get_id }} : {{ question.get_text }}</a></h2>
+
+        </article>
+
+    {% endfor %}
+
+{% verbatim %}
+
+{% endverbatim %}
+
+{% endblock %}

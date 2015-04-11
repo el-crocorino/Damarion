@@ -1,17 +1,25 @@
 {% extends "layout.html.twig" %}
 
-{% form_theme voteForm _self %}
+    {% if voteForm %}
 
-{% block choice_widget_expanded %}
-        {% for child in form %}
-            <div {{ block('widget_container_attributes') }}>
-                {{ form_widget(child) }}
-                {{ form_label(child) }}
-            </div>
-        {% endfor %}
-{% endblock %}
+        {% form_theme voteForm _self %}
 
-{% block title %}Question {{ question.get_id }}{% endblock %}
+        {% block choice_widget_expanded %}
+
+                {% for child in form %}
+
+                    <div {{ block('widget_container_attributes') }}>
+                        {{ form_widget(child) }}
+                        {{ form_label(child) }}
+                    </div>
+
+                {% endfor %}
+
+        {% endblock %}
+
+    {% endif %}
+
+{% block title %}Question {{ question.get_order }}{% endblock %}
 
 {% block content %}
 
@@ -70,7 +78,7 @@
                     success: function(data) {
 
                         if (question_id != data) {
-                            window.location.replace('/question/' + data);
+                            window.location.replace('/public');
                         }
 
                     },
