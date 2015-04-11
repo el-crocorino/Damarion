@@ -1,33 +1,25 @@
 {% extends "layout.html.twig" %}
 
-    {% if voteForm %}
+{% form_theme voteForm _self %}
 
-        {% form_theme voteForm _self %}
+{% block choice_widget_expanded %}
+        {% for child in voteForm %}
+            <div {{ block('widget_container_attributes') }}>
+                {{ form_widget(child) }}
+                {{ form_label(child) }}
+            </div>
+        {% endfor %}
+{% endblock %}
 
-        {% block choice_widget_expanded %}
-
-                {% for child in form %}
-
-                    <div {{ block('widget_container_attributes') }}>
-                        {{ form_widget(child) }}
-                        {{ form_label(child) }}
-                    </div>
-
-                {% endfor %}
-
-        {% endblock %}
-
-    {% endif %}
-
-{% block title %}Question {{ question.get_order }}{% endblock %}
+{% block title %}Question {{ question.get_id }}{% endblock %}
 
 {% block content %}
 
     <article>
 
-        <h2>Question {{ question.get_order }} : {{ question.get_text }}</h2>
+        <h2>Question {{ question.get_id }}</h2>
 
-        <h3>Vote</h3>
+        <h3>{{ question.get_text }}</h3>
 
         {% if voteForm %}
 
@@ -61,14 +53,15 @@
 
     </article>
 
-        <script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto; display:none"></div>
+
+    <script src="{{ app.request.basepath }}/lib/highcharts/js/highcharts.js"></script>
 
     {% verbatim %}
 
         <script type="text/javascript">
 
             var question_id = {% endverbatim %}{{ question.get_id }}{% verbatim %};
-            var question_order = {% endverbatim %}{{ question.get_order }}{% verbatim %};
 
             (function check_current_question() {
 
@@ -78,7 +71,7 @@
                     success: function(data) {
 
                         if (question_id != data) {
-                            window.location.replace('/public');
+                            window.location.replace('/question/' + data);
                         }
 
                     },
@@ -97,8 +90,16 @@
 
             $(function() {
 
-                $('input[type=radio]').click(function() {
-                    $(this).closest("form").submit();
+                $('#container').highcharts({
+
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+
                 });
 
             });

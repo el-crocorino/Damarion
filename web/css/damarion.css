@@ -2,6 +2,11 @@ body {
     padding-top: 40px;
 }
 
+.body .main {
+    background-color: #000;
+    color: #fff;
+}
+
 .footer {
     border-top: 1px solid #ccc;
     padding-top: 10px;
@@ -15,4 +20,145 @@ body {
 .adminTable {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.content-main {
+    font: bold 25px arial, sans-serif;
+    margin: 0 auto;
+    width: 1280px;
+    height: 800px;
+    background-image: url('img/content_background.png');
+
+}
+
+.menu .nav {
+    display: inline;
+    float:left;
+    margin: 0px;
+}
+
+.menu .nav li {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    list-style-type: none;
+}
+
+.stats {
+    background-image: url('img/stats.png');
+}
+
+.menu .jokers {
+    display: inline;
+    float: right;
+    margin: 0px;
+}
+
+.menu .jokers li {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    list-style-type: none;
+}
+
+.fifty {
+    background-image: url('img/fifty.png');
+}
+
+.friend {
+    background-image: url('img/friend.png');
+}
+
+.public {
+    background-image: url('img/public.png');
+}
+
+.question_data {
+    height : 400px;
+    margin: 0 auto;
+}
+
+#stats_container {
+    height: 400px;
+    width: 600px;
+    margin: 0 auto;
+}
+
+.question .file {
+    width: 90%;
+    margin: 5px auto;
+    min-height: 300px;
+}
+.question img{
+    display: block;
+    margin:  auto;
+}
+
+.question {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.question-text {
+    margin: 0 auto;
+    width: 1206px;
+    height: 117px;
+    line-height: 117px;
+    background-image: url('img/question.png');
+    text-align: center;
+}
+
+ul.answers-list{
+    width: 100% ;
+    margin: 0;
+}
+
+ul.answers-list li {
+    float:left;
+    list-style-type: none;
+    display: block;
+    margin: 5px;
+    width : 598px;
+    height: 70px;
+    line-height: 70px;
+    background-image: url('img/rep1.png');
+}
+
+li.odd {
+    background-image: url('img/rep3.png');
+}
+
+.list-item-header {
+    display: inline-block;
+    color: #d38d5f;
+    margin-left: 118px;
+}
+
+li.odd .list-item-header {
+    margin-left: 35px;
+}
+
+input[type="radio"] {
+  margin-top: -5px;
+  vertical-align: middle;
+}
+
+.prev {
+    float: left;
+    height: 60px;
+    width: 200px;
+}
+
+.reload {
+    margin-top: 150px;
+    margin-right: auto;
+    margin-left: auto;
+    height: 60px;
+    width: 200px;
+}
+
+.next {
+    float: right;
+    height: 60px;
+    width: 200px;
 }

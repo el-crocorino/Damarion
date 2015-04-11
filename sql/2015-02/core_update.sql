@@ -19,10 +19,12 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `game`
 --
 
-DROP TABLE IF EXISTS `game`;
 CREATE TABLE IF NOT EXISTS `game` (
   `game_id` int(10) NOT NULL AUTO_INCREMENT,
   `game_title` varchar(25) NOT NULL,
+  `game_friend` tinyint(1) DEFAULT NULL,
+  `game_public` tinyint(1) DEFAULT NULL,
+  `game_fifty` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
@@ -30,8 +32,9 @@ CREATE TABLE IF NOT EXISTS `game` (
 -- Daten für Tabelle `game`
 --
 
-INSERT INTO `game` (`game_id`, `game_title`) VALUES
-(1, 'test');
+INSERT INTO `game` (`game_id`, `game_title`, `game_friend`, `game_public`, `game_fifty`) VALUES
+(1, 'test2', NULL, NULL, NULL),
+(3, 'test 3', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -39,23 +42,25 @@ INSERT INTO `game` (`game_id`, `game_title`) VALUES
 -- Tabellenstruktur für Tabelle `question`
 --
 
-DROP TABLE IF EXISTS `question`;
 CREATE TABLE IF NOT EXISTS `question` (
   `question_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `question_game_id` int(10) unsigned NOT NULL,
   `question_active` tinyint(1) NOT NULL,
   `question_text` varchar(255) NOT NULL,
+  `question_has_picture_after` tinyint(1) NOT NULL DEFAULT '0',
   `question_order` int(10) NOT NULL,
   PRIMARY KEY (`question_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
 -- Daten für Tabelle `question`
 --
 
-INSERT INTO `question` (`question_id`, `question_game_id`, `question_active`, `question_text`, `question_order`) VALUES
-(1, 1, 1, 'Qu\'est-ce qui est petit et marron ?', 1),
-(2, 1, 0, 'Oú est Charlie ?', 2);
+INSERT INTO `question` (`question_id`, `question_game_id`, `question_active`, `question_text`, `question_has_picture_after`, `question_order`) VALUES
+(1, 1, 1, 'Qu''est-ce qui est petit et marron?', 0, 1),
+(2, 1, 0, 'Oú est Charlie ?', 0, 2),
+(3, 1, 0, 'Quel est le sens de la vie ?', 0, 3),
+(9, 1, 0, 'Pourquoi du violet?', 0, 4);
 --
 
 -- --------------------------------------------------------

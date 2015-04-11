@@ -61,6 +61,9 @@
 
             $game->set_id($row['game_id']);
             $game->set_title($row['game_title']);
+            $game->set_friend((int)$row['game_friend']);
+            $game->set_public((int)$row['game_public']);
+            $game->set_fifty((int)$row['game_fifty']);
 
             return $game;
 
@@ -74,7 +77,10 @@
         public function save(Game $game) {
 
             $game_data = array(
-                'game_title' => $game->get_title()
+                'game_title' => $game->get_title(),
+                'game_friend' => $game->get_friend(),
+                'game_public' => $game->get_public(),
+                'game_fifty' => $game->get_fifty()
                 );
 
             if ($game->get_id()) {

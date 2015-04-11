@@ -33,9 +33,28 @@
 
     });
 
+    $app->get('/list', function() use ($app) {
+
+        $questions = $app['dao.question']->find_all();
+
+        $answers = $app['dao.answer']->find_all();
+        $games = $app['dao.game']->find_all();
+        $users = $app['dao.user']->find_all();
+        $votes = $app['dao.vote']->find_all();
+
+        return $app['twig']->render('list.html.twig', array(
+            'questions' => $questions,
+            'answers' => $answers,
+            'games' => $games,
+            'users' => $users,
+            'votes' => $votes
+        ));
+
+    });
+
     $app->get('/hashpwd', function() use ($app) {
 
-        $rawPassword = '<?admin?>';
+        $rawPassword = 'damarion';
         $salt = '%qUgq3NAYfC1MKwrW?yevbE';
         $encoder = $app['security.encoder.digest'];
 
@@ -43,27 +62,67 @@
 
     });
 
-    // Question Page
+    $app->get('/ajax/check', function() use ($app) {
 
-    /*$app->get('/question/{question_id}', function($question_id) use ($app) {
+        $question = $app['dao.question']->find_current();
 
-        $question = $app['dao.question']->find($question_id);
-        $answers = $app['dao.answer']->find_all_by_question($question_id);
-        $votes = $app['dao.vote']->find_all_by_question($question_id);
+        return $question->get_id();
 
-        return $app['twig']->render('question.html.twig', array(
-            'question' => $question,
-            'answers' => $answers,
-            'votes' => $votes
-        ));
+    });
 
-    });*/
+    $app->match('/ajax/joker/{joker}', function ($joker, Request $request) use ($app) {
+
+        $question = $app['dao.question']->find_current();
+        $game = $question->get_game();
+
+        $fn = 'set_' . $joker;
+
+        $game->$fn(true);
+        $app['dao.game']->save($game);
+
+        return $question->get_id();
+
+    });
+
+    $app->match('/ajax/prev/{question_order}', function ($question_order, Request $request) use ($app) {
+
+        $prev_order = $question_order - 1;
+
+        $question = $app['dao.question']->find_by_order($question_order);
+        $question->set_active(false);
+        $app['dao.question']->save($question);
+
+        $prev_question = $app['dao.question']->find_by_order($prev_order);
+        $prev_question->set_active(true);
+        $app['dao.question']->save($prev_question);
+
+        return $prev_question->get_id();
+
+    });
+
+    $app->match('/ajax/next/{question_order}', function ($question_order, Request $request) use ($app) {
+
+        $next_order = $question_order + 1;
+
+        $question = $app['dao.question']->find_by_order($question_order);
+        $question->set_active(false);
+        $app['dao.question']->save($question);
+
+        $next_question = $app['dao.question']->find_by_order($next_order);
+        $next_question->set_active(true);
+        $app['dao.question']->save($next_question);
+
+        return $next_question->get_id();
+
+    });
+
     // Question details with votes
 
     $app->match('/question/{question_id}', function ($question_id, Request $request) use ($app) {
 
         $question = $app['dao.question']->find($question_id);
         $answers = $app['dao.answer']->find_all_by_question($question_id);
+        $right_answer = $app['dao.question']->get_right_answer($question_id);
         $votes = $app['dao.vote']->find_all_by_question($question_id);
 
         foreach ($answers AS $answer) {
@@ -73,9 +132,25 @@
         $user = $app['security']->getToken()->getUser();
 
         $voteFormView = null;
-        $has_voted = false;
+        $has_voted = 0;
+        $is_right = 0;
+        $user_vote_id = 0;
 
         if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
+
+            $has_voted = count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
+
+            if ($has_voted > 0) {
+
+                $user_vote = $app['dao.vote']->find_all_by_question_and_user($question->get_id(), $user->get_id());
+
+                if ($has_voted && $user_vote[0]->get_answer_id() == $right_answer) {
+                    $is_right = 1;
+                }
+
+                $user_vote_id = (int)$user_vote[0]->get_answer_id();
+
+            }
 
             // A user is fully authenticated : he can add and see votes
 
@@ -100,12 +175,9 @@
                     $app['session']->getFlashBag()->add('error', 'Un seul vote par question !');
                 }
 
-
             }
 
             $voteFormView = $voteForm->createView();
-
-            $has_voted = (boolean)count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
 
         }
 
@@ -116,7 +188,7 @@
         $vote_stats = array();
 
         foreach ($stats AS $vote_data) {
-            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array($vote_data['votes'] / $user_count * 100));
+            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array(round($vote_data['votes'] / $user_count * 100)));
         }
 
         $vote_stats = json_encode($vote_stats);
@@ -127,6 +199,9 @@
             'votes' => $votes,
             'voteForm' => $voteFormView,
             'has_voted' => $has_voted,
+            'user_vote_id' => $user_vote_id,
+            'right_answer' => $right_answer,
+            'is_right' => $is_right,
             'vote_stats' => $vote_stats
             ));
 
@@ -194,6 +269,97 @@
             'votes' => $votes,
             'voteForm' => $voteFormView,
             'has_voted' => $has_voted
+            ));
+
+    });
+    // Question details with votes
+
+    $app->match('/main', function (Request $request) use ($app) {
+
+        $question = $app['dao.question']->find_current();
+        $question_id = $question->get_id();
+        $answers = $app['dao.answer']->find_all_by_question($question_id);
+        $right_answer = $app['dao.question']->get_right_answer($question_id);
+        $votes = $app['dao.vote']->find_all_by_question($question_id);
+
+        foreach ($answers AS $answer) {
+            $form_option_answers[$answer->get_id()] = $answer->get_text();
+        }
+
+        $user = $app['security']->getToken()->getUser();
+
+        $voteFormView = null;
+        $has_voted = 0;
+        $is_right = 0;
+        $user_vote_id = 0;
+
+        if ($app['security']->isGranted('IS_AUTHENTICATED_FULLY')) {
+
+            $has_voted = count($app['dao.vote']->find_all_by_question_and_user($question_id, $user->get_id()));
+
+            if ($has_voted > 0) {
+
+                $user_vote = $app['dao.vote']->find_all_by_question_and_user($question->get_id(), $user->get_id());
+
+                if ($has_voted && $user_vote[0]->get_answer_id() == $right_answer) {
+                    $is_right = 1;
+                }
+
+                $user_vote_id = (int)$user_vote[0]->get_answer_id();
+
+            }
+
+            // A user is fully authenticated : he can add and see votes
+
+            $vote = new Vote();
+
+            $vote->set_question($question);
+            $vote->set_question_id($question_id);
+
+            $vote->set_user($user);
+            $vote->set_user_id($user->get_id());
+
+            $voteForm = $app['form.factory']->create(new VoteType(), $form_option_answers);
+            $voteForm->handleRequest($request);
+
+            if ($voteForm->isSubmitted() && $voteForm->isValid()) {
+
+                $vote->set_answer_id($voteForm->getViewData()['answer_id']);
+
+                if ($app['dao.vote']->save($vote)) {
+                    $app['session']->getFlashBag()->add('success', 'Votre vote a bien été enregistré');
+                } else {
+                    $app['session']->getFlashBag()->add('error', 'Un seul vote par question !');
+                }
+
+            }
+
+            $voteFormView = $voteForm->createView();
+
+        }
+
+        $votes = $app['dao.vote']->find_all_by_question($question_id);
+        $stats = $app['dao.question']->get_stats_by_question($question_id);
+
+        $user_count = count($app['dao.user']->find_all());
+        $vote_stats = array();
+
+        foreach ($stats AS $vote_data) {
+            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array(round($vote_data['votes'] / $user_count * 100)));
+        }
+
+        $vote_stats = json_encode($vote_stats);
+
+        return $app['twig']->render('question.html.twig', array(
+            'question' => $question,
+            'answers' => $answers,
+            'votes' => $votes,
+            'voteForm' => $voteFormView,
+            'has_voted' => $has_voted,
+            'user_vote_id' => $user_vote_id,
+            'right_answer' => $right_answer,
+            'is_right' => $is_right,
+            'vote_stats' => $vote_stats
             ));
 
     });
@@ -441,8 +607,10 @@
             $questions_list[$value->get_id()] = $value->get_text();
         }
 
+        $answer->set_questions_list($questions_list);
+
         $answer = new Answer();
-        $answerForm = $app['form.factory']->create(new AnswerType(), $questions_list);
+        $answerForm = $app['form.factory']->create(new AnswerType(), $answer);
         $answerForm->handleRequest($request);
 
         if ($answerForm->isSubmitted() && $answerForm->isValid()) {
@@ -452,7 +620,6 @@
             $answer->set_text($answer_data['text']);
             $answer->set_right($answer_data['right']);
             $answer->set_active($answer_data['active']);
-
 
             $app['dao.answer']->save($answer);
             $app['session']->getFlashBag()->add('success', 'The answer was successfully created.');
@@ -469,7 +636,18 @@
     $app->match('/admin/answer/{id}/edit', function($id, Request $request) use ($app) {
 
         $answer = $app['dao.answer']->find($id);
+        $questions = $app['dao.question']->find_all();
+
+        $questions_list = array();
+
+        foreach ($questions AS $value) {
+            $questions_list[$value->get_id()] = $value->get_text();
+        }
+
+        $answer->set_questions_list($questions_list);
+
         $answerForm = $app['form.factory']->create(new AnswerType(), $answer);
+
         $answerForm->handleRequest($request);
 
         if ($answerForm->isSubmitted() && $answerForm->isValid()) {
@@ -479,7 +657,9 @@
 
         return $app['twig']->render('answer_form.html.twig', array(
             'title' => 'Edit answer',
-            'answerForm' => $answerForm->createView()));
+            'answerForm' => $answerForm->createView(),
+            'questions_list' => $questions_list
+            ));
 
     });
 

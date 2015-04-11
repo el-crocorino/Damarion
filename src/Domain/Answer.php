@@ -47,6 +47,13 @@
         protected $question = NULL;
 
         /**
+         * Questions list
+         *
+         * @var array question list
+         */
+        protected $question_list = array();
+
+        /**
          * Sets id
          *
          * @param int $id
@@ -224,6 +231,24 @@
          */
         public function get_question() {
             return $this->question;
+        }
+
+        /**
+         * Sets questions_list
+         *
+         * @param int $questions_list
+         */
+        public function set_questions_list($questions_list) {
+            $this->questions_list = $questions_list;
+        }
+
+        /**
+         * Gets questions_list
+         *
+         * @return int
+         */
+        public function get_questions_list() {
+            return $this->questions_list;
         }
 
     }

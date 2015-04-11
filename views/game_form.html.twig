@@ -15,6 +15,10 @@
 
     {% endfor %}
 
+    <div class="row">
+        <a href="/admin" onClick="history.back();return false;">Back</a>
+    </div>
+
     <div class="well">
 
         {{ form_start(gameForm, { 'attr': {'class': 'form-horizontal'} }) }}

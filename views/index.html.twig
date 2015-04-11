@@ -1,24 +1,9 @@
-{% extends "layout.html.twig" %}
+{% extends 'question_layout.html.twig' %}
+{% set adminMenu = true %}
 
-{% block title %}Start{% endblock %}
 
 {% block content %}
 
-    {% for question in questions %}
-
-        <article>
-
-            <h2><a class="questionTitle" href="/question/{{ question.get_id }}">Question {{ question.get_id }} : {{ question.get_text }}</a></h2>
-
-        </article>
-
-        <?php
-            /*var_dump($games);
-            var_dump($answers);
-            var_dump($users);
-            var_dump($votes);*/
-        ?>
-
-    {% endfor %}
+    <div class="content-main"></div>
 
 {% endblock %}

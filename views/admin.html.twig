@@ -147,7 +147,7 @@
 
                                 <tr>
 
-                                    <td><a class="gameTitle" href="/game/{{ question.get_game.get_id }}">{{ question.get_game.get_title }}</a></td>
+                                    <td><a class="gameTitle" href="/admin/game/{{ question.get_game.get_id }}/edit">{{ question.get_game.get_title }}</a></td>
                                     <td>{{ question.get_order }}</td>
                                     <td>{{ question.get_text | truncate(60) }}</td>
                                     <td>
@@ -243,7 +243,7 @@
 
                                 <tr>
 
-                                    <td><a class="gameTitle" href="/question/{{ answer.get_question.get_id }}">{{ answer.get_question.get_text }}</a></td>
+                                    <td><a class="gameTitle" href="/admin/question/{{ answer.get_question.get_id }}/edit">{{ answer.get_question.get_text }}</a></td>
                                     <td>{{ answer.get_text | truncate(60) }}</td>
                                     <td>
                                         {% if answer.get_right == true %}
@@ -344,10 +344,10 @@
 
                                 <tr>
 
-                                    <td><a class="gameTitle" href="/game/{{ vote.get_question.get_game.get_id }}">{{ vote.get_question.get_game.get_title }}</a></td>
-                                    <td><a class="userTitle" href="/user/{{ vote.get_user.get_id }}">{{ vote.get_user.get_username }}</a></td>
-                                    <td><a class="questionTitle" href="/question/{{ vote.get_question.get_id }}">{{ vote.get_question.get_text }}</a></td>
-                                    <td><a class="answerTitle" href="/answer/{{ vote.get_answer.get_id }}">{{ vote.get_answer.get_text }}</a></td>
+                                    <td><a class="gameTitle" href="admin/game/{{ vote.get_question.get_game.get_id }}/edit">{{ vote.get_question.get_game.get_title }}</a></td>
+                                    <td><a class="userTitle" href="admin/user/{{ vote.get_user.get_id }}/edit">{{ vote.get_user.get_username }}</a></td>
+                                    <td><a class="questionTitle" href="admin/question/{{ vote.get_question.get_id }}/edit">{{ vote.get_question.get_text }}</a></td>
+                                    <td><a class="answerTitle" href="admin/answer/{{ vote.get_answer.get_id }}/edit">{{ vote.get_answer.get_text }}</a></td>
 
                                 </tr>
 

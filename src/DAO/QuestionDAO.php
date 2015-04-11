@@ -117,7 +117,7 @@
         }
 
         /**
-         * Return a list of all questions, sorted by date (most recent first).
+         * Return current question.
          *
          * @return array A list of all questions.
          */
@@ -130,6 +130,25 @@
                 return $this->buildDomainObject($row);
             } else {
                 throw new \Exception("No question matching id " . $id);
+            }
+
+        }
+
+
+        /**
+         * Return a id of right answer.
+         *
+         * @return array A list of all questions.
+         */
+        public function get_right_answer($question_id) {
+
+            $sql = 'SELECT answer_id FROM answer WHERE answer_question_id = ' . $question_id . ' and answer_right = 1';
+            $row = $this->get_db()->fetchAssoc($sql);
+
+            if ($row) {
+                return $row['answer_id'];
+            } else {
+                throw new \Exception("No right answer for queston with id " . $id);
             }
 
         }
@@ -172,6 +191,7 @@
             $question->set_id($row['question_id']);
             $question->set_text($row['question_text']);
             $question->set_order($row['question_order']);
+            $question->set_has_picture_after((boolean)$row['question_has_picture_after']);
 
             $question->set_active(false);
 
@@ -205,8 +225,9 @@
                 'question_game_id' => $question->get_game_id(),
                 'question_text' => $question->get_text(),
                 'question_order' => $question->get_order(),
-                'question_active' => $question->get_active()
-                );
+                'question_active' => $question->get_active(),
+                'question_has_picture_after' => (boolean)$question->get_has_picture_after()
+            );
 
             if ($question->get_id()) {
 
