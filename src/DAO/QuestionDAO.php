@@ -148,7 +148,7 @@
             if ($row) {
                 return $row['answer_id'];
             } else {
-                throw new \Exception("No right answer for queston with id " . $id);
+                throw new \Exception("No right answer for queston with id " . $question_id);
             }
 
         }

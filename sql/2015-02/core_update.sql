@@ -10,6 +10,14 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON *.* TO 'damarion_master'@'%' IDENTIFIED BY PASSWORD '*3B01AC4F513E83388566BF6F0172BC7D797AC918';
+
+GRANT ALL PRIVILEGES ON `damarion`.* TO 'damarion_master'@'%';
+
+GRANT SELECT ON *.* TO 'damarion_slave'@'%' IDENTIFIED BY PASSWORD '*24729F4E99510EF2111D9831F7FBE528055BE13F';
+
+
+
 --
 -- Datenbank: `damarion`
 
@@ -92,8 +100,26 @@ INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_
 INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_right`, `answer_active`) VALUES
 (5, 2, 'Au Népal', 1, 1),
 (6, 2, 'In ze kitcheun', 0, 1),
-(7, 2, 'Derrière toi, c\'est affreux', 0, 1),
+(7, 2, 'Derrière toi, c''est affreux', 0, 1),
 (8, 2, 'Au ski', 0, 1);
+
+INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_right`, `answer_active`) VALUES
+(14, 3, '42', 1, 1),
+(15, 3, 'De gauche à droite', 0, 1),
+(16, 3, 'De bas en haut', 0, 1),
+(17, 3, 'Giratoire', 0, 1);
+
+INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_right`, `answer_active`) VALUES
+(18, 9, 'Parce que', 1, 1),
+(19, 9, 'Pourquoi pas ?', 0, 1),
+(20, 9, 'Voir plus loin', 0, 1),
+(21, 9, 'Certainement pas', 0, 1);
+
+INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_right`, `answer_active`) VALUES
+(22, 10, 'Cacharel', 0, 1),
+(23, 10, 'Levi''s', 0, 1),
+(24, 10, 'Le slip français', 1, 1),
+(25, 10, 'Petit bateau', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -125,9 +151,7 @@ INSERT INTO `user` (`user_id`, `user_username`, `user_password`, `user_salt`, `u
 
 -- Raw password is <?admin?>
 INSERT INTO `user` ( `user_username` , `user_password` , `user_salt` , `user_role` )
-VALUES (
-'admin', 'odcRJHrXoehTyFydjKy/bZHjPnjOa+QRc0VBwlRsbedQnfaL+2EdJdhqa6EtAImi6gf8M7+Y7cmJYKRTyZfi0w==', '%qUgq3NAYfC1MKwrW?yevbE', 'ROLE_ADMIN'
-)
+VALUES ('admin', 'odcRJHrXoehTyFydjKy/bZHjPnjOa+QRc0VBwlRsbedQnfaL+2EdJdhqa6EtAImi6gf8M7+Y7cmJYKRTyZfi0w==', '%qUgq3NAYfC1MKwrW?yevbE', 'ROLE_ADMIN');
 
 -- --------------------------------------------------------
 
@@ -144,16 +168,3 @@ CREATE TABLE IF NOT EXISTS `vote` (
   PRIMARY KEY (`vote_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
---
--- Daten für Tabelle `vote`
---
-
-INSERT INTO `vote` (`vote_id`, `vote_user_id`, `vote_question_id`, `vote_answer_id`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 3),
-(3, 2, 1, 2),
-(4, 2, 2, 4),
-(5, 3, 1, 4),
-(6, 3, 2, 3),
-(7, 4, 1, 2),
-(8, 4, 2, 1);

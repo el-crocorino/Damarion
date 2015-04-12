@@ -193,47 +193,72 @@
 
             }
 
-            (function check_current_question() {
+            function fifty() {
 
-                $.ajax({
+                var inactive_answers = $.ajax({
 
-                    url: '/ajax/check',
+                    url: '/ajax/fifty/' + question_id,
                     success: function(data) {
+                        return data;
+                    },
+                    async : false
 
-                        if (question_id != data) {
-                            window.location.replace('/question/' + data);
+                });
+
+                inactive_answers = $.parseJSON(inactive_answers.responseText);
+
+                var id = null,
+                    inactive_list = [];
+
+
+                $('.list-item-header').each(function(index) {
+
+                    var active = false,
+                        input = $(this.children[0]);
+
+
+                    $(inactive_answers).each(function() {
+
+                        if (input.val() == this[0]) {
+                            inactive_list.push(input.attr('id'));
                         }
 
+                    });
+
+                });
+
+                $(inactive_list).each(function(key, value) {
+
+                    $('.required').each(function(index, item) {
+
+                        if ($(item).attr('for') == value) {
+                            $(item).hide();
+                            $('#' + value).hide();
+                        }
+
+                    });
+
+                });
+
+            }
+
+            function get_stats(question_id) {
+
+                var data_series =  $.ajax({
+
+                    url: '/ajax/stats/' + question_id,
+                    success: function(data) {
+                        return data;
                     },
-
-                    complete: function() {
-
-                      // Schedule the next request when the current one's complete
-
-                      setTimeout(check_current_question, 10000);
-
-                    }
+                    async : false
 
                 });
 
-            })();
+                return $.parseJSON(data_series.responseText);
 
-            $(function() {
+            }
 
-                // Answers Style
-
-                $('.answers-list').children().each(function(index) {
-
-                    if (index == 1 || index == 3) {
-                        $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/rep3.png)');
-                        $(this).addClass('odd');
-                    }
-
-                });
-
-                $('input[type=radio]').click(function() {
-                    $(this).closest("form").submit();
-                });
+            function get_highcharts(data_series) {
 
                 // Highcharts Conf
 
@@ -284,8 +309,52 @@
                     title: {
                         text: ''
                     },
-                    series: {% endverbatim %}{{ vote_stats|raw }}{% verbatim %}
+                    series: data_series
 
+                });
+
+            }
+
+            (function check_current_question() {
+
+                $.ajax({
+
+                    url: '/ajax/check',
+                    success: function(data) {
+
+                        if (question_id != data) {
+                            window.location.replace('/question/' + data);
+                        }
+
+                    },
+
+                    complete: function() {
+
+                      // Schedule the next request when the current one's complete
+
+                      setTimeout(check_current_question, 10000);
+
+                    }
+
+                });
+
+            })();
+
+            $(function() {
+
+                // Answers Style
+
+                $('.answers-list').children().each(function(index) {
+
+                    if (index == 1 || index == 3) {
+                        $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/rep3.png)');
+                        $(this).addClass('odd');
+                    }
+
+                });
+
+                $('input[type=radio]').click(function() {
+                    $(this).closest("form").submit();
                 });
 
                 // Click events
@@ -303,8 +372,14 @@
                 });
 
                 $("#stats_btn").click(function() {
+
+                    var data_series = get_stats(question_id);
+
+                    get_highcharts(data_series);
+
                     $("#img_container").toggle();
                     $("#stats_container").toggle();
+
                 });
 
                 if (question_fifty == 1) {
@@ -322,6 +397,9 @@
                 $(".fifty").click(function() {
                     use_joker('fifty');
                     $(this).css('background-image', 'url({% endverbatim %}{{ app.request.basepath }}{% verbatim %}/css/img/fifty2.png)');
+
+                    fifty();
+
                 });
 
                 $(".friend").click(function() {

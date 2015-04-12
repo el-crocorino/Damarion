@@ -87,6 +87,29 @@
         }
 
         /**
+         * Return a list of all answers, sorted by date (most recent first).
+         *
+         * @return array A list of all answers.
+         */
+        public function find_inactive_answers($question_id) {
+
+            $sql = 'SELECT * FROM answer WHERE answer_question_id = ' . $question_id . ' AND answer_active = 0';
+
+            $result = $this->get_db()->fetchAll($sql);
+
+            // Convert query result to an array of domain objects
+
+            $answers = array();
+
+            foreach ($result as $row) {
+                $answers[] = $this->buildDomainObject($row);
+            }
+
+            return $answers;
+
+        }
+
+        /**
          * Return a list of all answers for a question
          *
          * @param integer $question_id The question id.

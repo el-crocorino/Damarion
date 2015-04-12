@@ -70,6 +70,39 @@
 
     });
 
+
+    $app->match('/ajax/stats/{question_id}', function ($question_id, Request $request) use ($app) {
+
+        $stats = $app['dao.question']->get_stats_by_question($question_id);
+
+        $user_count = count($app['dao.user']->find_all());
+        $vote_stats = array();
+
+        foreach ($stats AS $vote_data) {
+            $vote_stats[] = array('name' => $vote_data['answer_text'], 'data' => array(round($vote_data['votes'] / $user_count * 100)));
+        }
+
+        $vote_stats = json_encode($vote_stats);
+
+        return $vote_stats;
+
+    });
+
+
+    $app->match('/ajax/fifty/{question_id}', function ($question_id, Request $request) use ($app) {
+
+        $answers = $app['dao.answer']->find_inactive_answers($question_id, true);
+
+        $active_answers = array();
+
+        foreach ($answers AS $value) {
+            $active_answers[] = $value->get_id();
+        }
+
+        return json_encode($active_answers);
+
+    });
+
     $app->match('/ajax/joker/{joker}', function ($joker, Request $request) use ($app) {
 
         $question = $app['dao.question']->find_current();
