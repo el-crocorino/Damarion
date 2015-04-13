@@ -17,7 +17,7 @@ class QuestionType extends AbstractType {
                 'required' => false
             ))
             ->add('hasPictureAfter', 'checkbox', array(
-                'label' => 'Afficher question après ?',
+                'label' => 'Afficher image après ?',
                 'required' => false
             ));
 

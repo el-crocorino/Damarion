@@ -129,7 +129,7 @@
             if ($row) {
                 return $this->buildDomainObject($row);
             } else {
-                throw new \Exception("No question matching id " . $id);
+                throw new \Exception("No active question");
             }
 
         }
@@ -148,7 +148,7 @@
             if ($row) {
                 return $row['answer_id'];
             } else {
-                throw new \Exception("No right answer for queston with id " . $question_id);
+                throw new \Exception("No right answer for question with id " . $question_id);
             }
 
         }
