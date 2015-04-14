@@ -55,7 +55,7 @@
         <br style="clear:both" />
 
         <div class="question_data">
-            <div id="img_container" class="question file"><img id="question_img" src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt="" style="{% if question.get_has_picture_after == 1 %}display:none;{% endif %}"></div>
+            <div id="img_container" class="question file"><img class="question_img" src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.png" alt="" style="{% if question.get_has_picture_after == 1 %}display:none;{% endif %}"><img class="question_img" src="{{ app.request.basepath }}/css/img/{{ question.get_id }}.gif" alt="" style="{% if question.get_has_picture_after == 1 %}display:none;{% endif %}"></div>
             <div id="stats_container" style="display:none"></div>
         </div>
 
@@ -153,7 +153,7 @@
             }
 
             function show_picture_after() {
-                $('#question_img').show();
+                $('.question_img').show();
             }
 
             function set_previous_question(question_order) {
