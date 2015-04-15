@@ -16,9 +16,6 @@ GRANT ALL PRIVILEGES ON `damarion`.* TO 'damarion_master'@'%';
 
 GRANT SELECT ON *.* TO 'damarion_slave'@'%' IDENTIFIED BY PASSWORD '*24729F4E99510EF2111D9831F7FBE528055BE13F';
 
-
-
-
 --
 -- Datenbank: `damarion`
 --
@@ -36,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `answer` (
   `answer_right` tinyint(1) NOT NULL,
   `answer_active` tinyint(1) NOT NULL,
   PRIMARY KEY (`answer_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=98 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=102 ;
 
 --
 -- Daten für Tabelle `answer`
@@ -68,8 +65,8 @@ INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_
 (44, 15, 'Un facehugger', 0, 1),
 (45, 15, 'Une araignée de mer', 1, 1),
 (46, 16, '7', 0, 1),
-(47, 16, '11', 0, 1),
-(48, 16, '15', 1, 1),
+(47, 16, '11', 1, 1),
+(48, 16, '15', 0, 1),
 (49, 16, '3', 0, 1),
 (50, 19, '6 assiettes', 0, 1),
 (51, 19, '17 assiettes', 0, 1),
@@ -118,7 +115,11 @@ INSERT INTO `answer` (`answer_id`, `answer_question_id`, `answer_text`, `answer_
 (94, 30, 'Une sonate de Schubert', 0, 1),
 (95, 30, 'Un tube de Lady Gaga', 0, 1),
 (96, 30, 'Un album de Motorhead', 0, 1),
-(97, 30, 'Une sérénade du XVIIe siècle', 1, 1);
+(97, 30, 'Une sérénade du XVIIe siècle', 1, 1),
+(98, 31, 'Olivier lui chatouille les pieds', 0, 1),
+(99, 31, 'Le biberon arrive', 0, 1),
+(100, 31, 'Son papa arrive', 1, 1),
+(101, 31, 'Il a vu un chat passer', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -156,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `question` (
   `question_has_picture_after` tinyint(1) NOT NULL DEFAULT '0',
   `question_order` int(10) NOT NULL,
   PRIMARY KEY (`question_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
 
 --
 -- Daten für Tabelle `question`
@@ -181,7 +182,8 @@ INSERT INTO `question` (`question_id`, `question_game_id`, `question_active`, `q
 (27, 1, 0, 'Qu''a percuté cette voiture ?', 0, 16),
 (28, 1, 0, 'A quelle occasion a été prise cette photo ?', 0, 17),
 (29, 1, 0, 'Si Damien était un fromage, il serait...', 0, 18),
-(30, 1, 0, 'Si Marion était une chanson, elle serait...', 0, 19);
+(30, 1, 0, 'Si Marion était une chanson, elle serait...', 0, 19),
+(31, 1, 0, 'Pourquoi Damien rit-il ?', 0, 20);
 
 -- --------------------------------------------------------
 
@@ -279,3 +281,23 @@ CREATE TABLE IF NOT EXISTS `vote` (
   `vote_answer_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`vote_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
+
+--
+-- Daten für Tabelle `vote`
+--
+
+INSERT INTO `vote` (`vote_id`, `vote_user_id`, `vote_question_id`, `vote_answer_id`) VALUES
+(1, 5, 1, 23),
+(2, 5, 11, 26),
+(3, 5, 12, 32),
+(4, 5, 13, 34),
+(5, 5, 14, 39),
+(6, 5, 15, 43),
+(7, 5, 16, 49),
+(8, 5, 19, 52),
+(9, 5, 20, 54),
+(10, 5, 26, 80),
+(11, 5, 27, 85),
+(12, 5, 28, 89),
+(13, 5, 29, 91),
+(14, 5, 21, 61);
