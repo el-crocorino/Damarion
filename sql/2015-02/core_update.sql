@@ -282,22 +282,3 @@ CREATE TABLE IF NOT EXISTS `vote` (
   PRIMARY KEY (`vote_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
---
--- Daten für Tabelle `vote`
---
-
-INSERT INTO `vote` (`vote_id`, `vote_user_id`, `vote_question_id`, `vote_answer_id`) VALUES
-(1, 5, 1, 23),
-(2, 5, 11, 26),
-(3, 5, 12, 32),
-(4, 5, 13, 34),
-(5, 5, 14, 39),
-(6, 5, 15, 43),
-(7, 5, 16, 49),
-(8, 5, 19, 52),
-(9, 5, 20, 54),
-(10, 5, 26, 80),
-(11, 5, 27, 85),
-(12, 5, 28, 89),
-(13, 5, 29, 91),
-(14, 5, 21, 61);
